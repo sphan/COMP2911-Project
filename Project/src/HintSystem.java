@@ -44,16 +44,36 @@ public class HintSystem {
 		} else if (mode == MEDIUM) {
 			//random number into almost full box
 			int[] boxes = new int[BOXES];
-			while (int count = 0; count < BOXES; count = count + 3) {
+			for (int count = 0; count < BOXES; count = count + 3) {
 				int total = 0;
 				for (int a = count; a < count + 3; a++) {
-					for (int b = count; b < count + 3; b++) {
+					for (int b = 0; b < 3; b++) {
 						if (Sudoku[a][b] != 0) {
 							total++;
 						}
 					}
+					boxes[count] = total;
+					total = 0;
+					for (int c = 3; c < 6 + 3; c++) {
+						if (Sudoku[a][c] != 0) {
+							total++;
+						}
+					}
+					boxes[count + 1] = total;
+					total = 0;
+					for (int d = 6; d < 9; d++) {
+						if (Sudoku[a][d] != 0) {
+							total++;
+						}
+					}
+					boxes[count + 2] = total;
+					total = 0;
 				}
-				boxes[count] = total;
+			}
+			//now find least full square
+			for (int size: boxes) {
+				
+				
 			}
 			
 			
