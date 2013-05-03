@@ -10,11 +10,9 @@ public class Square {
 	 * @param boxNum The 3x3 box number in which the square is in.
 	 * @param positionInBox The position in the 3x3 box the square is in.
 	 */
-	public Square(int row, int column, int boxNum, int positionInBox) {
-		this.row = row;
-		this.column = column;
-		this.threeByThreeBox = boxNum;
-		this.positionInThreeByThree = positionInBox;
+	public Square(int boxNum, int val) {
+		this.threeByThreeBoxIndex = boxNum;
+		this.currentValue = val;
 	}
 	
 	/**
@@ -28,6 +26,24 @@ public class Square {
 	}
 	
 	/**
+	 * Set the 3x3 box in which the current square is in.
+	 * Index from 0 to 8.
+	 * @param threeByThreeBoxIndex The 3x3 box number that
+	 * the square is in range from 0 to 8.
+	 */
+	public void setThreeByThreeBox(int threeByThreeBoxIndex) {
+		this.threeByThreeBoxIndex = threeByThreeBoxIndex;
+	}
+
+	/**
+	 * Set the position of the square in the 3x3 box.
+	 * @param positionInThreeByThree
+	 */
+	public void setPositionInThreeByThree(int positionInThreeByThree) {
+		this.positionInThreeByThree = positionInThreeByThree;
+	}
+	
+	/**
 	 * Get the current value of the square. This is the value
 	 * displayed in the box in GUI.
 	 * @return An integer that specifies the value displayed.
@@ -35,11 +51,21 @@ public class Square {
 	public int getCurrentValue() {
 		return this.currentValue;
 	}
+	
+	public int getThreeByThreeBox() {
+		return threeByThreeBoxIndex;
+	}
+	
+	public int getPositionInThreeByThree() {
+		return positionInThreeByThree;
+	}
 
 	private int row;
 	private int column;
-	private int threeByThreeBox;
+	private int threeByThreeBoxIndex;
 	private int positionInThreeByThree;
+	
+
 	private int currentValue;
 	private LinkedList<Integer> availableValues;
 	private LinkedList<Integer> usedValues;
