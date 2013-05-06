@@ -1,4 +1,3 @@
-import java.util.LinkedList;
 
 public class Square {
 	
@@ -10,9 +9,9 @@ public class Square {
 	 * @param boxNum The 3x3 box number in which the square is in.
 	 * @param positionInBox The position in the 3x3 box the square is in.
 	 */
-	public Square(int boxNum, int val) {
+	public Square(int boxNum, int type) {
 		this.threeByThreeBoxIndex = boxNum;
-		this.currentValue = val;
+		this.type = type;
 	}
 	
 	/**
@@ -44,6 +43,16 @@ public class Square {
 	}
 	
 	/**
+	 * Set the type of a square. The types can be Empty,
+	 * or User-input, or hint, or predefined or error. This
+	 * is used to determine the GUI for the cell/square.
+	 * @param squareType
+	 */
+	public void setType(int squareType) {
+		this.type = squareType;
+	}
+	
+	/**
 	 * Get the current value of the square. This is the value
 	 * displayed in the box in GUI.
 	 * @return An integer that specifies the value displayed.
@@ -52,6 +61,10 @@ public class Square {
 		return this.currentValue;
 	}
 	
+	/**
+	 * Get the 3x3 box in which the current square is in.
+	 * @return The 3x3 box number of the current square.
+	 */
 	public int getThreeByThreeBox() {
 		return threeByThreeBoxIndex;
 	}
@@ -59,14 +72,28 @@ public class Square {
 	public int getPositionInThreeByThree() {
 		return positionInThreeByThree;
 	}
-
-	private int row;
-	private int column;
+	
+	/**
+	 * Get the type of the square.
+	 * @return
+	 */
+	public int getType() {
+		return this.type;
+	}
+	
+//	private int row;
+//	private int column;
 	private int threeByThreeBoxIndex;
 	private int positionInThreeByThree;
 	
 
 	private int currentValue;
-	private LinkedList<Integer> availableValues;
-	private LinkedList<Integer> usedValues;
+	private int type;
+//	private LinkedList<Integer> availableValues;
+//	private LinkedList<Integer> usedValues;
+	public static final int EMPTY_CELL = 0;
+	public static final int HINT_CELL = 1;
+	public static final int USER_INPUT_CELL = 2;
+	public static final int PREDEFINE_CELL = 3;
+	public static final int ERROR_CELL = 4;
 }
