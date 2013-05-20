@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 
 public class Square {
 	
@@ -12,6 +14,22 @@ public class Square {
 	public Square(int boxNum, int type) {
 		this.threeByThreeBoxIndex = boxNum;
 		this.type = type;
+		this.availableValues = new LinkedList<Integer>();
+		this.usedValues = new LinkedList<Integer>();
+		
+		// initialise the list of available numbers
+		// at the start, all squares have all 9 numbers
+		// available.
+		for (int i = 1; i <= 9; i++) {
+			availableValues.add(i);
+		}		
+	}
+	
+	public void resetTrackingValues() {
+		this.usedValues.clear();
+		for (int i = 1; i <= 9; i++) {
+			availableValues.add(i);
+		}
 	}
 	
 	/**
@@ -34,14 +52,6 @@ public class Square {
 		this.threeByThreeBoxIndex = threeByThreeBoxIndex;
 	}
 
-	/**
-	 * Set the position of the square in the 3x3 box.
-	 * @param positionInThreeByThree
-	 */
-	public void setPositionInThreeByThree(int positionInThreeByThree) {
-		this.positionInThreeByThree = positionInThreeByThree;
-	}
-	
 	/**
 	 * Set the type of a square. The types can be Empty,
 	 * or User-input, or hint, or predefined or error. This
@@ -69,8 +79,23 @@ public class Square {
 		return threeByThreeBoxIndex;
 	}
 	
-	public int getPositionInThreeByThree() {
-		return positionInThreeByThree;
+	/**
+	 * Get the list of available values or values
+	 * which have not tried for a particular
+	 * square.
+	 * @return The list of available values.
+	 */
+	public LinkedList<Integer> getAvailableValues() {
+		return availableValues;
+	}
+
+	/**
+	 * Get the list of used values that were inappropriate
+	 * for a particular square.
+	 * @return The list of used values.
+	 */
+	public LinkedList<Integer> getUsedValues() {
+		return usedValues;
 	}
 	
 	/**
@@ -84,13 +109,10 @@ public class Square {
 //	private int row;
 //	private int column;
 	private int threeByThreeBoxIndex;
-	private int positionInThreeByThree;
-	
-
 	private int currentValue;
 	private int type;
-//	private LinkedList<Integer> availableValues;
-//	private LinkedList<Integer> usedValues;
+	private LinkedList<Integer> availableValues;
+	private LinkedList<Integer> usedValues;
 	public static final int EMPTY_CELL = 0;
 	public static final int HINT_CELL = 1;
 	public static final int USER_INPUT_CELL = 2;
