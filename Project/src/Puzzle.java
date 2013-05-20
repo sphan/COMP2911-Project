@@ -5,6 +5,8 @@ import java.util.Random;
 /**
  * A class that generates the Sudoku puzzle
  * according the level specified.
+ * The board generation code was greatly insight from
+ * http://www.codeproject.com/Articles/23206/Sudoku-Algorithm-Generates-a-Valid-Sudoku-in-0-018
  * @author tsph001 - Sandy Phan
  *
  */
@@ -32,13 +34,24 @@ public class Puzzle {
 		Random rand = new Random();
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
-				int k = rand.nextInt(9) + 1;
-				while (hasDuplicate(i, j, k) ||
-					   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), k)) {
-					k = rand.nextInt(9) + 1;
+				if (puzzle[i][j].getAvailableValues().size() == 0)
+					continue;
+				int k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
+				while (hasDuplicate(i, j, puzzle[i][j].getAvailableValues().get(k)) ||
+					   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), puzzle[i][j].getAvailableValues().get(k))) {
+					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
+					puzzle[i][j].getAvailableValues().remove(k);
+					if (puzzle[i][j].getAvailableValues().size() == 0)
+						break;
+					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
 				}
-				puzzle[i][j].setCurrentValue(k);
-				puzzle[i][j].setType(Square.PREDEFINE_CELL);
+				if (puzzle[i][j].getAvailableValues().size() > 0) {
+					puzzle[i][j].setCurrentValue(puzzle[i][j].getAvailableValues().get(k));
+					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
+					puzzle[i][j].getAvailableValues().remove(k);
+					puzzle[i][j].setType(Square.PREDEFINE_CELL);
+				}
+				
 			}
 		}
 		
