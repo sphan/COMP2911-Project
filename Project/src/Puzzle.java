@@ -32,20 +32,35 @@ public class Puzzle {
 	 */
 	private void generatePuzzle() {
 		Random rand = new Random();
+		boolean conflict = false;
+		int k = 0;
+		
+		// Loop through the board and assign numbers to the squares
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
-				if (puzzle[i][j].getAvailableValues().size() == 0)
-					continue;
-				int k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
+				
+				k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
 				while (hasDuplicate(i, j, puzzle[i][j].getAvailableValues().get(k)) ||
 					   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), puzzle[i][j].getAvailableValues().get(k))) {
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getAvailableValues().remove(k);
-					if (puzzle[i][j].getAvailableValues().size() == 0)
+					if (puzzle[i][j].getAvailableValues().size() == 0) {
+						puzzle[i][j].resetTrackingValues();
+						puzzle[i][j].setCurrentValue(0);
+						if (j > 1)
+							j = j - 2;
+						else {
+							j = COLUMN_NUMBER - 2;
+							i--;
+						}
+						conflict = true;
 						break;
+					} else
+						conflict = false;
 					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
 				}
-				if (puzzle[i][j].getAvailableValues().size() > 0) {
+				
+				if (!conflict) {
 					puzzle[i][j].setCurrentValue(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getAvailableValues().remove(k);
@@ -172,43 +187,43 @@ public class Puzzle {
 				threeByThreeIndex == 1 ||
 				threeByThreeIndex == 2) {
 			iStart = 0;
-			iEnd = 2;
+			iEnd = 3;
 			jStart = 0;
-			jEnd = 2;
+			jEnd = 3;
 			if (threeByThreeIndex == 1) {
 				jStart = 3;
-				jEnd = 5;
+				jEnd = 6;
 			} else if (threeByThreeIndex == 2) {
 				jStart = 6;
-				jEnd = 8;
+				jEnd = 6;
 			}
 		} else if (threeByThreeIndex == 3 ||
 				threeByThreeIndex == 4 ||
 				threeByThreeIndex == 5) {
 			iStart = 3;
-			iEnd = 5;
+			iEnd = 6;
 			jStart = 0;
-			jEnd = 2;
+			jEnd = 3;
 			if (threeByThreeIndex == 4) {
 				jStart = 3;
-				jEnd = 5;
+				jEnd = 6;
 			} else if (threeByThreeIndex == 5) {
 				jStart = 6;
-				jEnd = 8;
+				jEnd = 9;
 			}
 		} else if (threeByThreeIndex == 6 ||
 				threeByThreeIndex == 7 ||
 				threeByThreeIndex == 8) {
 			iStart = 6;
-			iEnd = 8;
+			iEnd = 9;
 			jStart = 0;
-			jEnd = 2;
+			jEnd = 3;
 			if (threeByThreeIndex == 7) {
 				jStart = 3;
-				jEnd = 5;
+				jEnd = 6;
 			} else if (threeByThreeIndex == 8) {
 				jStart = 6;
-				jEnd = 8;
+				jEnd = 9;
 			}
 		}
 		
