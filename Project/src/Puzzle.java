@@ -20,6 +20,7 @@ public class Puzzle {
 		this.difficultyLevel = difficultyLevel;
 		initialisePuzzle();
 		generatePuzzle();
+		printPuzzle();
 	}
 	
 	/**
@@ -82,7 +83,7 @@ public class Puzzle {
 		}
 	}
 	
-	public static void printPuzzle() {
+	public void printPuzzle() {
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
 				System.out.print(puzzle[i][j].getCurrentValue() + " ");
@@ -222,9 +223,9 @@ public class Puzzle {
 	// levels of difficulty (not sure where to place them yet).
 	// Should this be placed in the main function or should this be
 	// placed in any classes that have a difficulty defined.
-//	private static final int EASY = 0;
-//	private static final int MEDIUM = 1;
-//	private static final int HARD = 2;
+//	public static final int EASY = 0;
+//	public static final int MEDIUM = 1;
+//	public static final int HARD = 2;
 	private static final int ROW_NUMBER = 9;
 	private static final int COLUMN_NUMBER = 9;
 //	private static final int INITIAL_VALUE = 0;
