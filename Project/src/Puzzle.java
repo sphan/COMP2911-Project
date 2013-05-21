@@ -39,35 +39,58 @@ public class Puzzle {
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
 				
-				k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
-				while (hasDuplicate(i, j, puzzle[i][j].getAvailableValues().get(k)) ||
-					   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), puzzle[i][j].getAvailableValues().get(k))) {
-					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
-					puzzle[i][j].getAvailableValues().remove(k);
-					if (puzzle[i][j].getAvailableValues().size() == 0) {
-						puzzle[i][j].resetTrackingValues();
-						puzzle[i][j].setCurrentValue(0);
-						if (j > 1)
-							j = j - 2;
-						else {
-							j = COLUMN_NUMBER - 2;
-							i--;
-						}
-						conflict = true;
-						break;
-					} else
-						conflict = false;
-					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
+				// This is when backtracking a square, and that square 
+				if (conflict && puzzle[i][j].getAvailableValues().size() == 0) {
+					puzzle[i][j].resetTrackingValues();
+					puzzle[i][j].setCurrentValue(0);
+					if (j > 1)
+						j = j - 2;
+					else {
+						j = COLUMN_NUMBER - 2;
+						i--;
+					}
+					System.out.println("backtracking occurred 2");
+					continue;
 				}
+				
+				try {
+					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
+					while (hasDuplicate(i, j, puzzle[i][j].getAvailableValues().get(k)) ||
+						   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), puzzle[i][j].getAvailableValues().get(k))) {
+						puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
+						puzzle[i][j].getAvailableValues().remove(k);
+						if (puzzle[i][j].getAvailableValues().size() == 0) {
+							puzzle[i][j].resetTrackingValues();
+							puzzle[i][j].setCurrentValue(0);
+							if (j > 1)
+								j = j - 2;
+							else {
+								j = COLUMN_NUMBER - 2;
+								i--;
+							}
+							conflict = true;
+							System.out.println("backtracking occurred 1");
+							break;
+						}
+							
+						k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
+					}
+					conflict = false;
+				} catch (IllegalArgumentException e) {
+					System.out.println("Size was: "+ puzzle[i][j].getAvailableValues().size());
+				}
+				
 				
 				if (!conflict) {
 					puzzle[i][j].setCurrentValue(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getAvailableValues().remove(k);
 					puzzle[i][j].setType(Square.PREDEFINE_CELL);
+					System.out.println("Cell[" + i + "][" + j +"]: " + puzzle[i][j].getCurrentValue());
 				}
 				
 			}
+			System.out.println();
 		}
 		
 		removeCells();
@@ -254,9 +277,9 @@ public class Puzzle {
 //	public static final int EASY = 0;
 //	public static final int MEDIUM = 1;
 //	public static final int HARD = 2;
-	private static final int ROW_NUMBER = 9;
-	private static final int COLUMN_NUMBER = 9;
+	public static final int ROW_NUMBER = 9;
+	public static final int COLUMN_NUMBER = 9;
 //	private static final int INITIAL_VALUE = 0;
 	
-	private static Square puzzle[][] = new Square[ROW_NUMBER][COLUMN_NUMBER];
+	private Square puzzle[][] = new Square[ROW_NUMBER][COLUMN_NUMBER];
 }

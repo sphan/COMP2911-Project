@@ -79,6 +79,14 @@ public class Square {
 		return threeByThreeBoxIndex;
 	}
 	
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+	
 	/**
 	 * Get the list of available values or values
 	 * which have not tried for a particular
@@ -106,8 +114,8 @@ public class Square {
 		return this.type;
 	}
 	
-//	private int row;
-//	private int column;
+	private int row;
+	private int column;
 	private int threeByThreeBoxIndex;
 	private int currentValue;
 	private int type;
