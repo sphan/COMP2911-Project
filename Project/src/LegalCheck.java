@@ -2,7 +2,7 @@ import java.util.LinkedList;
 
 
 public class LegalCheck {
-	public static void isLegal(Puzzle p, Square s) {
+	public static void checkLegal(Puzzle p, Square s) {
 		puzzle = p;
 		int row = s.getRow();
 		int column = s.getColumn();
