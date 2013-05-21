@@ -26,6 +26,15 @@ public class Square {
 	}
 	
 	/**
+	 * Changes the value of the draft entry for the given
+	 * number.
+	 * @param value Integer specifying draft value
+	 */
+	public void switchDraftValue(int value){
+		this.draftEntry[value] = !this.draftEntry[value];
+	}
+	
+	/**
 	 * Set the 3x3 box in which the current square is in.
 	 * Index from 0 to 8.
 	 * @param threeByThreeBoxIndex The 3x3 box number that
@@ -52,6 +61,10 @@ public class Square {
 		return this.currentValue;
 	}
 	
+	public boolean isMarkedDraft(int value){
+		return this.draftEntry[value];
+	}
+	
 	public int getThreeByThreeBox() {
 		return threeByThreeBoxIndex;
 	}
@@ -65,7 +78,9 @@ public class Square {
 	private int threeByThreeBoxIndex;
 	private int positionInThreeByThree;
 	
+	private boolean[] draftEntry = {false, false, false, false, false, false, false, false, false};
 
+	//0 for empty
 	private int currentValue;
 	private LinkedList<Integer> availableValues;
 	private LinkedList<Integer> usedValues;
