@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
+//
 public class GameInterface {
 	static JFrame frame;
 	static Container pane;
