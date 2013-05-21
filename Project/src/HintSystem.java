@@ -11,7 +11,46 @@ public class HintSystem {
 		}
 	}
 	
-	public Move Hint (int mode, int[][] Sudoku) {
+	public Move Hint (int[][] Sudoku) {
+		int[][] Sudoku1 = new int[9][9]; 
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				Sudoku1[i][j] = 0;
+			}
+		}
+		
+		Sudoku1[0][0] = 5;
+		Sudoku1[1][0] = 3;
+		Sudoku1[0][1] = 6;
+		Sudoku1[2][1] = 9;
+		Sudoku1[2][2] = 8;
+		Sudoku1[4][0] = 7;
+		Sudoku1[1][3] = 1;
+		Sudoku1[4][1] = 9;
+		Sudoku1[5][1] = 5;
+		Sudoku1[7][2] = 6;
+		Sudoku1[0][3] = 8;
+		Sudoku1[0][4] = 4;
+		Sudoku1[0][5] = 7;
+		Sudoku1[3][4] = 8;
+		Sudoku1[4][3] = 6;
+		Sudoku1[5][4] = 3;
+		Sudoku1[4][5] = 2;
+		Sudoku1[8][3] = 3;
+		Sudoku1[8][4] = 1;
+		Sudoku1[8][5] = 6;
+		Sudoku1[1][6] = 6;
+		Sudoku1[3][7] = 4;
+		Sudoku1[4][7] = 1;
+		Sudoku1[5][7] = 9;
+		Sudoku1[4][8] = 8;
+		Sudoku1[6][6] = 2;
+		Sudoku1[7][6] = 8;
+		Sudoku1[8][7] = 5;
+		Sudoku1[8][8] = 9;
+		Sudoku1[7][8] = 7;
+		
 		//has box 0 - 8
 		//each box has 0 - 8 units
 		//has 81 units
@@ -25,6 +64,7 @@ public class HintSystem {
 				}
 			}
 		}
+		print();
 		toSolve = search(copy(toSolve));
 		return giveMove(Sudoku);
 	}
@@ -39,6 +79,20 @@ public class HintSystem {
 			}
 		}
 		return null;
+	}
+	
+	private void print() {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				//if (j == 3 || j == 6 || j == 9) {
+					//System.out.print("\n");
+				//}
+				System.out.print("s" + toSolve[i][j] + " ");
+			}
+			if (i == 3 || i == 6 || i == 9) {
+				System.out.print("\n");
+			}
+		}
 	}
 	
 	private String[][] search (String[][] solve) {
