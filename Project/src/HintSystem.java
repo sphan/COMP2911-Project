@@ -12,6 +12,11 @@ public class HintSystem {
 	}
 	
 	public Move Hint (int[][] Sudoku) {
+		// if obviously wrong, return null move
+		if (isLegal(Sudoku) == false) {
+			return null;
+		}
+		
 		int[][] Sudoku1 = new int[9][9]; 
 		
 		for (int i = 0; i < 9; i++) {
@@ -66,10 +71,16 @@ public class HintSystem {
 		}
 		print();
 		toSolve = search(copy(toSolve));
+		//could be null
 		return giveMove(Sudoku);
 	}
 	
 	private Move giveMove(int[][] Sudoku) {
+		//if null-- can't find solution
+		//or gameboard generated is wrong
+		if (Sudoku == null) {
+			return null;
+		}
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (Sudoku[i][j] == 0) {
@@ -89,19 +100,22 @@ public class HintSystem {
 				//}
 				System.out.print("s" + toSolve[i][j] + " ");
 			}
-			if (i == 3 || i == 6 || i == 9) {
+			if (i == 2 || i == 5 || i == 8) {
 				System.out.print("\n");
 			}
 		}
 	}
 	
 	private String[][] search (String[][] solve) {
+		//if incorrect, backtrack
 		if (solve == null) {
 			return null;
 		}
-		if (done(solve)) {
+		//if complete return
+		if (isLegal(solve)) {
 			return solve;
 		}
+		//finds square with least possibilities to search
 		int x = 0;
 		int y = 0;
 		int cost = solve[0][0].length();
@@ -114,14 +128,20 @@ public class HintSystem {
 				}
 			}
 		}
+		//searches possibilities
+		//if complete, return
+		//else return any that is valid
+		String[][] validBuffer = null;
 		String[][] buffer = null;
 		for (int i = 0; i < cost; i++) {
 			buffer = search(assign(copy(solve), x, y, (int)(solve[x][y].charAt(i))));
 			if (done(buffer)) {
 				return buffer;
+			} else if (buffer != null) {
+				validBuffer = buffer;
 			}
 		}
-		return buffer;
+		return validBuffer;
 	}
 	
 	private String[][] copy(String[][] a) {
@@ -134,6 +154,9 @@ public class HintSystem {
 	    return b;
 	}
 	
+	//is redundant- just return if valid ie. not null
+	//replace with check to see if obviously wrong
+	//otherwise return
 	private Boolean done(String[][] check) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -156,6 +179,8 @@ public class HintSystem {
 	}
 	
 	private String[][] eliminate(String[][] search, int x, int y, int value) {
+		//tries to eliminate value from position x, y
+		//if done, return
 		if (search[x][y].indexOf((char)value) != -1) {
 			return search;
 		}
