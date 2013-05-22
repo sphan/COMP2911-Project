@@ -34,13 +34,16 @@ public class Puzzle {
 		Random rand = new Random();
 		boolean conflict = false;
 		int k = 0;
+		int duplicateFound = 0;
 		
 		// Loop through the board and assign numbers to the squares
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
 				
+				duplicateFound = 0;
+				
 				// This is when backtracking a square, and that square 
-				if (conflict && puzzle[i][j].getAvailableValues().size() == 0) {
+				if (puzzle[i][j].getAvailableValues().size() == 0) {
 					puzzle[i][j].resetTrackingValues();
 					puzzle[i][j].setCurrentValue(0);
 					if (j > 1)
@@ -49,7 +52,6 @@ public class Puzzle {
 						j = COLUMN_NUMBER - 2;
 						i--;
 					}
-					System.out.println("backtracking occurred 2");
 					continue;
 				}
 				
@@ -57,6 +59,7 @@ public class Puzzle {
 					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
 					while (hasDuplicate(i, j, puzzle[i][j].getAvailableValues().get(k)) ||
 						   hasDuplicateInBox(puzzle[i][j].getThreeByThreeBox(), puzzle[i][j].getAvailableValues().get(k))) {
+						duplicateFound++;
 						puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 						puzzle[i][j].getAvailableValues().remove(k);
 						if (puzzle[i][j].getAvailableValues().size() == 0) {
@@ -69,13 +72,17 @@ public class Puzzle {
 								i--;
 							}
 							conflict = true;
-							System.out.println("backtracking occurred 1");
 							break;
+						} else {
+							conflict = false;
 						}
 							
 						k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
 					}
-					conflict = false;
+					if (duplicateFound == 0) {
+						conflict = false;
+					}
+						
 				} catch (IllegalArgumentException e) {
 					System.out.println("Size was: "+ puzzle[i][j].getAvailableValues().size());
 				}
@@ -86,13 +93,10 @@ public class Puzzle {
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getAvailableValues().remove(k);
 					puzzle[i][j].setType(Square.PREDEFINE_CELL);
-					System.out.println("Cell[" + i + "][" + j +"]: " + puzzle[i][j].getCurrentValue());
 				}
 				
 			}
-			System.out.println();
 		}
-		
 		removeCells();
 	}
 	
@@ -268,8 +272,6 @@ public class Puzzle {
 	//  6 7 8
 	// These should be a constant, as it will not be modified.
 	private static final int[] boxNum = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-//	private static final int[] positionInBox = {0, 1, 2, 3, 4, 5, 6, 7, 8};
-//	private static final int[] availableNumbers = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 	
 	// levels of difficulty (not sure where to place them yet).
 	// Should this be placed in the main function or should this be
