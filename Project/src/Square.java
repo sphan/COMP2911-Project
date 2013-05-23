@@ -1,6 +1,13 @@
 import java.util.LinkedList;
 
-
+/**
+ * This class is a representation of the 81 cells
+ * or square in a Sudoku game. It contains data
+ * that are needed in generating the puzzle or during
+ * solving a game.
+ * @author Sandy
+ *
+ */
 public class Square {
 	
 	/**
@@ -25,6 +32,9 @@ public class Square {
 		}		
 	}
 	
+	/**
+	 * Reset the available list used in backtracking.
+	 */
 	public void resetTrackingValues() {
 		this.usedValues.clear();
 		for (int i = 1; i <= 9; i++) {
@@ -63,6 +73,23 @@ public class Square {
 	}
 	
 	/**
+	 * Set the row of a square at initialisation.
+	 * @param row The row where the square belongs to.
+	 */
+	public void setRow(int row) {
+		this.row = row;
+	}
+	
+	/**
+	 * Set the column of a square.
+	 * @param column The column in which the square
+	 * belongs to.
+	 */
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	
+	/**
 	 * Get the current value of the square. This is the value
 	 * displayed in the box in GUI.
 	 * @return An integer that specifies the value displayed.
@@ -79,10 +106,18 @@ public class Square {
 		return threeByThreeBoxIndex;
 	}
 	
+	/**
+	 * Get the row in which the square belongs to.
+	 * @return The row number.
+	 */
 	public int getRow() {
 		return row;
 	}
 
+	/**
+	 * Get the column in which the square belongs to.
+	 * @return The column number.
+	 */
 	public int getColumn() {
 		return column;
 	}
@@ -108,7 +143,8 @@ public class Square {
 	
 	/**
 	 * Get the type of the square.
-	 * @return
+	 * @return The type in which the square was set to
+	 * throughout the game.
 	 */
 	public int getType() {
 		return this.type;
