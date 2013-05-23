@@ -156,7 +156,15 @@ public class Puzzle {
 	 * constructor.
 	 */
 	private static void removeCells() {
-		
+		Random rand = new Random();
+		int removeNum = 0;
+		if (difficultyLevel == EASY) {
+			removeNum = rand.nextInt();
+		} else if (difficultyLevel == MEDIUM) {
+			
+		} else if (difficultyLevel == HARD) {
+			
+		}
 	}
 	
 	private static int difficultyLevel;
@@ -172,9 +180,9 @@ public class Puzzle {
 	// levels of difficulty (not sure where to place them yet).
 	// Should this be placed in the main function or should this be
 	// placed in any classes that have a difficulty defined.
-//	public static final int EASY = 0;
-//	public static final int MEDIUM = 1;
-//	public static final int HARD = 2;
+	public static final int EASY = 0;
+	public static final int MEDIUM = 1;
+	public static final int HARD = 2;
 	public static final int ROW_NUMBER = 9;
 	public static final int COLUMN_NUMBER = 9;
 //	private static final int INITIAL_VALUE = 0;
