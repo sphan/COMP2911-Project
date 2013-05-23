@@ -1,34 +1,59 @@
 import java.util.LinkedList;
 
-
+/**
+ * This class provides methods that are used
+ * in checking if certain value has duplicates
+ * in certain regions such as rows, column or 
+ * 3x3 box.
+ * @author Sandy
+ *
+ */
 public class LegalCheck {
-	public static void checkLegal(Puzzle p, Square s) {
+	
+	/**
+	 * Check if a particular move in a particular square
+	 * for the puzzle is valid/legal. That is, there is
+	 * no duplicates in its row, column and region.
+	 * @param p The puzzle or board.
+	 * @param s The square that we want to place the value
+	 * in.
+	 * @param val The value needed for duplicate checks.
+	 * @return True if there is a duplicate in any direction,
+	 * and false otherwise.
+	 */
+	public static boolean checkLegal(Square[][] p, Square s, int val) {
 		puzzle = p;
 		int row = s.getRow();
 		int column = s.getColumn();
 		int boxNum = s.getThreeByThreeBox();
+		boolean legal = false;
 		
-		hasDuplicate(row, column, s.getCurrentValue());
-		hasDuplicateInBox(boxNum, s.getCurrentValue());
+		legal = hasDuplicate(row, column, val);	
+		if (legal == true) {
+			return true;
+		}
+		legal = hasDuplicateInBox(boxNum, val);
+		return legal;
 	}
 	
 	/**
 	 * Check duplicates in rows and columns.
-	 * @param row
-	 * @param column
-	 * @param val
+	 * @param row The row where the square belongs to.
+	 * @param column The column where the square belongs to.
+	 * @param val The value that is needed for duplicate checks.
 	 * @return True if there is a duplicate in current row or column.
+	 * False otherwise.
 	 */
-	public static boolean hasDuplicate(int row, int column, int val) {
+	private static boolean hasDuplicate(int row, int column, int val) {
 		for (int i = 0; i < Puzzle.COLUMN_NUMBER; i++) {
-			if (puzzle[row][i].getType() == 0)
+			if (puzzle[row][i].getType() == Square.EMPTY_CELL)
 				continue;
 			if (puzzle[row][i].getCurrentValue() == val)
 				return true;
 		}
 		
 		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
-			if (puzzle[i][column].getType() == 0)
+			if (puzzle[i][column].getType() == Square.EMPTY_CELL)
 				continue;
 			if (puzzle[i][column].getCurrentValue() == val)
 				return true;
@@ -40,12 +65,14 @@ public class LegalCheck {
 	/**
 	 * Check if there are duplicates in the 3x3 box where
 	 * the square belongs.
-	 * @param boxNum
-	 * @param val
-	 * @return
+	 * @param boxNum The 3x3 region number in which the
+	 * square belongs to.
+	 * @param val The value for duplicate verification.
+	 * @return True if there is a duplicate in the region.
+	 * False otherwise.
 	 */
-	public static boolean hasDuplicateInBox(int boxNum, int val) {
-		LinkedList<Square> list = getSquaresInThreeByThree(boxNum);
+	private static boolean hasDuplicateInBox(int boxNum, int val) {
+		LinkedList<Square> list = getSquaresInRegion(boxNum);
 		for (Square s : list) {
 			if (s.getType() == Square.EMPTY_CELL)
 				continue;
@@ -62,7 +89,7 @@ public class LegalCheck {
 	 * @return The list of squares that are in the given 
 	 * box number.
 	 */
-	public LinkedList<Square> getSquaresInThreeByThree(int threeByThreeIndex) {
+	private static LinkedList<Square> getSquaresInRegion(int threeByThreeIndex) {
 		LinkedList<Square> threeByList = new LinkedList<Square>();
 		int iStart = 0, iEnd = 0;
 		int jStart = 0, jEnd = 0;
@@ -118,5 +145,6 @@ public class LegalCheck {
 		return threeByList;
 	}
 	
-	private static Puzzle puzzle;
+	
+	private static Square[][] puzzle;
 }
