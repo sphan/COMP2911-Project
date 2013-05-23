@@ -107,17 +107,18 @@ public class Square {
 		return this.currentValue;
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * Get the 3x3 box in which the current square is in.
 	 * @return The 3x3 box number of the current square.
 	 */
-=======
 	public boolean isMarkedDraft(int value){
 		return this.draftEntry[value];
 	}
 	
->>>>>>> 3109813b677515a5f37715abe8e276b2fa4a6ee8
+	/**
+	 * Get the 3x3 region in which the square belongs to.
+	 * @return The index of the 3x3 region.
+	 */
 	public int getThreeByThreeBox() {
 		return threeByThreeBoxIndex;
 	}
@@ -169,14 +170,9 @@ public class Square {
 	private int row;
 	private int column;
 	private int threeByThreeBoxIndex;
-<<<<<<< HEAD
-=======
-	private int positionInThreeByThree;
-	
 	private boolean[] draftEntry = {false, false, false, false, false, false, false, false, false};
 
 	//0 for empty
->>>>>>> 3109813b677515a5f37715abe8e276b2fa4a6ee8
 	private int currentValue;
 	private int type;
 	private LinkedList<Integer> availableValues;
