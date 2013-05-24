@@ -144,7 +144,10 @@ public class Puzzle {
 	public static void printPuzzle() {
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
-				System.out.print(puzzle[i][j].getCurrentValue() + " ");
+				if (puzzle[i][j].getCurrentValue() == 0) {
+					System.out.print("  ");
+				} else
+					System.out.print(puzzle[i][j].getCurrentValue() + " ");
 			}
 			System.out.println();
 		}
@@ -158,12 +161,32 @@ public class Puzzle {
 	private static void removeCells() {
 		Random rand = new Random();
 		int removeNum = 0;
+		int min = 0, max = 0;
 		if (difficultyLevel == EASY) {
-			removeNum = rand.nextInt();
+			max = 49;
+			min = 44;
 		} else if (difficultyLevel == MEDIUM) {
+			max = 56;
+			min = 50;
 			
 		} else if (difficultyLevel == HARD) {
-			
+			max = 64;
+			min = 57; 
+		}
+		
+		removeNum = min + (int)(Math.random() * ((max - min) + 1));
+		System.out.println(removeNum);
+		
+		for (int i = 0; i < removeNum; i++) {
+			int j = rand.nextInt(ROW_NUMBER);
+			int k = rand.nextInt(COLUMN_NUMBER);
+			if (puzzle[j][k].getCurrentValue() == 0 && 
+					puzzle[j][k].getType() == Square.USER_INPUT_CELL) {
+				i--;
+				continue;
+			}
+			puzzle[j][k].setCurrentValue(0);
+			puzzle[j][k].setType(Square.USER_INPUT_CELL);
 		}
 	}
 	
