@@ -175,7 +175,6 @@ public class Puzzle {
 		}
 		
 		removeNum = min + (int)(Math.random() * ((max - min) + 1));
-		System.out.println(removeNum);
 		
 		for (int i = 0; i < removeNum; i++) {
 			int j = rand.nextInt(ROW_NUMBER);
@@ -185,20 +184,10 @@ public class Puzzle {
 				i--;
 				continue;
 			}
-			puzzle[j][k].setCurrentValue(0);
+			puzzle[j][k].setCurrentValue(INITIAL_VALUE);
 			puzzle[j][k].setType(Square.USER_INPUT_CELL);
 		}
 	}
-	
-	private static int difficultyLevel;
-	
-	// An array of the index of the 3x3 boxes.
-	// An array of the position index of the 3x3 boxes in the following format.
-	//  0 1 2
-	//  3 4 5
-	//  6 7 8
-	// These should be a constant, as it will not be modified.
-	private static final int[] boxNum = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 	
 	// levels of difficulty (not sure where to place them yet).
 	// Should this be placed in the main function or should this be
@@ -208,7 +197,15 @@ public class Puzzle {
 	public static final int HARD = 2;
 	public static final int ROW_NUMBER = 9;
 	public static final int COLUMN_NUMBER = 9;
-//	private static final int INITIAL_VALUE = 0;
+	private static final int INITIAL_VALUE = 0;
+	private static int difficultyLevel;
 	
+	// An array of the index of the 3x3 boxes.
+	// An array of the position index of the 3x3 boxes in the following format.
+	//  0 1 2
+	//  3 4 5
+	//  6 7 8
+	// These should be a constant, as it will not be modified.
+	private static final int[] boxNum = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 	private static Square puzzle[][] = new Square[ROW_NUMBER][COLUMN_NUMBER];
 }
