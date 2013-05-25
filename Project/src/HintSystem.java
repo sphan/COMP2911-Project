@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
 
->>>>>>> 6630459803f669c985bd637d797380291f5f1ba1
 public class HintSystem {
 	private String[][] toSolve;
 	private Move move;
@@ -271,4 +268,3 @@ public class HintSystem {
 	}
 	
 }
->>>>>>> branch 'master' of ssh://git@github.com/sphan/COMP2911-Project.git
