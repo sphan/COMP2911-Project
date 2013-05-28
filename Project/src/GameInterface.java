@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -18,6 +17,8 @@ public class GameInterface {
 	static JLabel lblInputLabel;
 	static JButton btnQuit;
 	static JButton btnHint;
+	static JLabel elapseTimer;
+	static JLabel timerLabel;
 	//static Square[][] entry;
 	
 	
@@ -43,6 +44,13 @@ public class GameInterface {
 		//subBox = new JTextPane[9][9];
 		setStartingBoxInfo();
 		
+		timerLabel = new JLabel("Elapsed Time");
+		pane.add(timerLabel);
+		timerLabel.setBounds(20, frameHeight - 120, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
+		
+		elapseTimer = new JLabel("00:00");
+		pane.add(elapseTimer);
+		elapseTimer.setBounds(30, frameHeight - 100, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
 		
 		btnInputMode = new JButton("Entry Mode");
 		lblInputLabel = new JLabel("Current Writing Mode Click or hold Shift to change");
@@ -65,6 +73,7 @@ public class GameInterface {
 		//frame.addKeyListener(new keyPressedListener());
 		frame.requestFocus();
 		frame.setVisible(true);
+		updateTimer();
 	}
 		
 	/**
@@ -109,6 +118,26 @@ public class GameInterface {
 		return true;
 	}
 	
+	public void updateTimer() {
+		int hour, minute, sec;
+		String label = "";
+		while (!hasWon()) {
+			long timeInSeconds = Puzzle.calculateTimeElapse(startTime);
+			hour = (int) (timeInSeconds / 3600);
+			timeInSeconds = timeInSeconds - (hour * 3600);
+			minute = (int) (timeInSeconds / 60);
+			timeInSeconds = timeInSeconds - (minute * 60);
+			sec = (int) (timeInSeconds);
+//			if (minute != 0)
+//				label += minute + ":" + sec;
+//			if (hour != 0)
+//				label += hour + ":" + minute + ":" + sec;
+//			label += sec;
+			elapseTimer.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute)  + 
+					":" + String.format("%02d", sec));
+		}
+	}
+	
 	//TODO Input to set the setting of the boxes (E.g. red "MISTAKE" color)
 	/**
 	 * De-selects all squares
@@ -142,8 +171,13 @@ public class GameInterface {
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
 				value = boardLayout[y][x].getCurrentValue();
+				box[x][y].setBackground(Color.white);
 				if (value != 0){
 					box[x][y].setText(value.toString());
+					if (boardLayout[y][x].getType() == Square.PREDEFINE_CELL) {
+//						box[x][y].setEnabled(false);
+						box[x][y].setBackground(Color.lightGray);
+					}
 				}
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
@@ -182,6 +216,7 @@ public class GameInterface {
 	private static int inputX;
 	private static int inputY;
 	private static Square[][] boardLayout;
+	private static Calendar startTime = Calendar.getInstance();
 	
 	//============================================================================================================================================================
 	//AAAAAAAA  CCCCCCCC  TTTTTTTTTT  IIIIII  OOOOOOOO  NN      NN        LL      IIIIII  SSSSSSSS  TTTTTTTTTT  EEEEEEEE  NN      NN  EEEEEEEE  RRRRRR    SSSSSSSS
