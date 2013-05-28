@@ -16,7 +16,7 @@ public class GameInterface {
 	static JButton btnInputMode;
 	static JLabel lblInputLabel;
 	static JButton btnQuit;
-	static Square[][] entry;
+	//static Square[][] entry;
 	
 	
 	static final int boxWidth = 50;
@@ -26,7 +26,9 @@ public class GameInterface {
 	static final int frameWidth = 600;
 	static final int frameHeight = 600;
 	
-	public GameInterface(){
+	public GameInterface(Square[][] newLayout){
+		boardLayout = newLayout;
+		
 		frame = new JFrame("Sudoku");
 		frame.setSize(frameWidth, frameHeight);
 		pane = frame.getContentPane();
@@ -35,7 +37,7 @@ public class GameInterface {
 		
 		box = new JButton[9][9];
 		//Get it so that I take this from the puzzle
-		entry = new Square[9][9];
+		//entry = new Square[9][9];
 		//subBox = new JTextPane[9][9];
 		setStartingBoxInfo();
 		
@@ -53,28 +55,19 @@ public class GameInterface {
 		btnQuit.setBounds(200, frameHeight - 60, btnQuit.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		btnQuit.addActionListener(new btnQuitListener());
 
-		frame.addKeyListener(new keyPressedListener());
+		//frame.addKeyListener(new keyPressedListener());
 		frame.requestFocus();
 		frame.setVisible(true);
 	}
 		
 	/**
 	 * Returns the integer of the given square or -1 if the square is empty
-	 * @param x		The x value of the square (0-8)
-	 * @param y		The y value of the square (0-8)
+	 * @param row	The row value of the square (0-8)
+	 * @param col	The column value of the square (0-8)
 	 * @return		The integer of the square
 	 */
-	public int getBoxValue(int x, int y){
-		Scanner converter = new Scanner(box[x][y].getText());
-		int contents;
-		try {
-			contents = converter.nextInt();
-		} catch (InputMismatchException e){
-			contents = -1;
-		} catch (NoSuchElementException e){
-			contents = -1;
-		}
-		return contents;
+	public int getBoxValue(int row, int col){
+		return boardLayout[row][col].getCurrentValue();
 	}
 	
 	//TODO Check if game has been won
@@ -101,6 +94,7 @@ public class GameInterface {
 	private static void setStartingBoxInfo(){
 		int x = 0;
 		int y = 0;
+		Integer value;
 		while (y < 9){
 			while (x < 9){
 				box[x][y] = new JButton();
@@ -109,10 +103,15 @@ public class GameInterface {
 				//pane.add(subBox[x][y]);
 				box[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
 				box[x][y].addActionListener(new btnSquareListener(x, y));
+				box[x][y].addKeyListener(new keyPressedListener(y, x));
+				value = boardLayout[y][x].getCurrentValue();
+				if (value != 0){
+					box[x][y].setText(value.toString());
+				}
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
 				//subBox[x][y].setEnabled(false);
-				entry[x][y] = new Square(0, 0);
+				//entry[x][y] = new Square(0, 0);
 				x++;
 			}
 			y++;
@@ -122,13 +121,13 @@ public class GameInterface {
 	
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
-		if (entry[inputX][inputY].getCurrentValue() > 0){
-			source.setText(Integer.toString(entry[inputX][inputY].getCurrentValue()));
+		if (boardLayout[inputX][inputY].getCurrentValue() > 0){
+			source.setText(Integer.toString(boardLayout[inputX][inputY].getCurrentValue()));
 		} else {
-			Square tempDraft = entry[inputX][inputY];
-			Integer x = 1;
+			Square tempDraft = boardLayout[inputX][inputY];
+			Integer x = 0;
 			String boxString = "";
-			while (x < 10){
+			while (x < 9){
 				if (tempDraft.isMarkedDraft(x)){
 					boxString = (boxString + " " + x.toString());
 				}
@@ -144,6 +143,7 @@ public class GameInterface {
 	private static JButton source;
 	private static int inputX;
 	private static int inputY;
+	private static Square[][] boardLayout;
 	
 	//============================================================================================================================================================
 	//AAAAAAAA  CCCCCCCC  TTTTTTTTTT  IIIIII  OOOOOOOO  NN      NN        LL      IIIIII  SSSSSSSS  TTTTTTTTTT  EEEEEEEE  NN      NN  EEEEEEEE  RRRRRR    SSSSSSSS
@@ -219,52 +219,59 @@ public class GameInterface {
 	 * @author Sam
 	 */
 	public static class keyPressedListener implements KeyListener{
+		private int row;
+		private int column;
 		
-		public void keyPressed(KeyEvent e) {
+		
+		public keyPressedListener(int row, int col){
+			this.row = row;
+			this.column = col;
 		}
+		
+		public void keyPressed(KeyEvent e) {}
 
-		public void keyReleased(KeyEvent e) {
-		}
+		public void keyReleased(KeyEvent e) {}
 
 		public void keyTyped(KeyEvent e) {
 			System.out.println("Key Typed " + e.getKeyChar());
-			int number = 0;
-			boolean shift = false;
-			Scanner toInt = new Scanner(e.toString());
-			try{
-				number = toInt.nextInt();
-				if (e.isShiftDown()){
+			if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL){
+				int number = 0;
+				boolean shift = false;
+				Scanner toInt = new Scanner(e.toString());
+				try{
+					number = toInt.nextInt();
+					if (e.isShiftDown()){
+						shift = true;
+					}
+				} catch (Exception error){
 					shift = true;
+					if (e.getKeyChar() == '!'){
+						number = 1;
+					} else if (e.getKeyChar() == '@'){
+						number = 2;
+					} else if (e.getKeyChar() == '#'){
+						number = 3;
+					} else if (e.getKeyChar() == '$'){
+						number = 4;
+					} else if (e.getKeyChar() == '%'){
+						number = 5;
+					} else if (e.getKeyChar() == '^'){
+						number = 6;
+					} else if (e.getKeyChar() == '&'){
+						number = 7;
+					} else if (e.getKeyChar() == '*'){
+						number = 8;
+					} else if (e.getKeyChar() == '('){
+						number = 9;
+					}
 				}
-			} catch (Exception error){
-				shift = true;
-				if (e.getKeyChar() == '!'){
-					number = 1;
-				} else if (e.getKeyChar() == '@'){
-					number = 2;
-				} else if (e.getKeyChar() == '#'){
-					number = 3;
-				} else if (e.getKeyChar() == '$'){
-					number = 4;
-				} else if (e.getKeyChar() == '%'){
-					number = 5;
-				} else if (e.getKeyChar() == '^'){
-					number = 6;
-				} else if (e.getKeyChar() == '&'){
-					number = 7;
-				} else if (e.getKeyChar() == '*'){
-					number = 8;
-				} else if (e.getKeyChar() == '('){
-					number = 9;
-				}				
 				if (shift){
-					entry[inputX][inputY].switchDraftValue(number);
+					boardLayout[row][column].switchDraftValue(number);
 				} else {
-					entry[inputX][inputY].setCurrentValue(number);
+					boardLayout[row][column].setCurrentValue(number);
 				}
+				resetSourceBox();
 			}
-			resetSourceBox();
-				
 			
 
 			
@@ -275,4 +282,5 @@ public class GameInterface {
 	//TODO Action Listener to tell if a number has been pressed and if so, what square to put it in
 	//TODO Expansion on that, send the number to the actual board thing.
 	
+	//NOTE: if you're looking for private variables, they're above the Action Listeners
 }
