@@ -1,21 +1,20 @@
 public class PuzzleTester {
 
 	public static void main(String args[]) {
-
+		HintSystem h = new HintSystem();
 		System.out.println("Easy puzzle:");
-		Puzzle.createPuzzle(Puzzle.EASY);
+		h.Hint(Puzzle.createPuzzle(Puzzle.EASY));
 		System.out.println();
 		System.out.println("Medium puzzle:");
-		Puzzle.createPuzzle(Puzzle.MEDIUM);
+		h.Hint(Puzzle.createPuzzle(Puzzle.MEDIUM));
 		System.out.println();
 		System.out.println("Hard puzzle:");
-		Puzzle.createPuzzle(Puzzle.HARD);
+		h.Hint(Puzzle.createPuzzle(Puzzle.HARD));
 		System.out.println();
 
-		int[][] Sudoku1 = new int[9][9]; 
-		HintSystem h = new HintSystem();
-		h.Hint(Sudoku1);
-		Puzzle p = new Puzzle(0);
+		//int[][] Sudoku1 = new int[9][9]; 
+		//h.Hint(Sudoku1);
+		//Puzzle p = new Puzzle(0);
 
 //		p.printPuzzle();
 	}
