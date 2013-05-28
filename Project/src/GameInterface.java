@@ -70,7 +70,37 @@ public class GameInterface {
 		return boardLayout[row][col].getCurrentValue();
 	}
 	
-	//TODO Check if game has been won
+	/**
+	 * Checks if the player has won the game. This checks
+	 * if the boards if completely filled first, then for each filled
+	 * squares, checks if there are duplicates in the regions.
+	 * @return True if the board is completely filled and all values
+	 * are valid. False otherwise.
+	 */
+	public boolean hasWon() {
+		boolean boardFilled = false;
+		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
+			for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
+				if (boardLayout[i][j].getCurrentValue() != 0) {
+					boardFilled = true;
+				} else {
+					boardFilled = false;
+					break;
+				}
+			}
+		}
+		
+		if (boardFilled) {
+			for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
+				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
+					if (!LegalCheck.checkLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()))
+						return false;
+				}
+			}
+		} else
+			return false;
+		return true;
+	}
 	
 	//TODO Input to set the setting of the boxes (E.g. red "MISTAKE" color)
 	/**
