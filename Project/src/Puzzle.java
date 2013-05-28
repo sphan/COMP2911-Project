@@ -186,6 +186,7 @@ public class Puzzle {
 			}
 			puzzle[j][k].setCurrentValue(INITIAL_VALUE);
 			puzzle[j][k].setType(Square.USER_INPUT_CELL);
+			puzzle[j][k].resetTrackingValues();
 		}
 	}
 	
