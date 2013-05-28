@@ -1,9 +1,19 @@
 import java.util.ArrayList;
 
+/**
+ * A class to return a hint given a board state
+ * @author Richard Li
+ * Using code from www.colloquial.com/games/sudoku/java_sudoku/html
+ * which was written by Bob Carpenter as well as original code
+ */
 public class HintSystem {
 	private String[][] toSolve;
 	private Move move;
 	
+	/**
+	 * Constructs a HintSystem
+	 * initializes toSolve
+	 */
 	public HintSystem() {
 		toSolve = new String[9][9];
 		for (int i = 0; i < 9; i++) {
@@ -14,15 +24,12 @@ public class HintSystem {
 		move = new Move(-1, -1, 0);
 	}
 	
-	public Move Hint (int[][] Sudoku) {
-		// if obviously wrong, return null move
-		/*
-		if (isLegal(Sudoku) == false) {
-			return null;
-		}
-		*/
-		
-		//Below is test case
+	/**
+	 * Creates a hint based on the current board state
+	 * @param Sudoku the board
+	 * @return a move with hint if found, else null
+	 */
+	public Move Hint (Square[][] Sudoku) {
 		int[][] Sudoku1 = new int[9][9]; 
 		
 		for (int i = 0; i < 9; i++) {
@@ -66,51 +73,73 @@ public class HintSystem {
 		
 		//Addressed as Sudoku1[y][x]
 		
-		Sudoku = Sudoku1;
+		//disable to test with actual input
+		//Sudoku = Sudoku1;
+		
 		
 		//has unit 0 - 8
 		//each unit has 0 - 8 squares
 		//has 81 squares
 		
 		//prints original sudoku
-		printSolved(Sudoku);
+		print(Sudoku);
 		
 		//sets up grid to eliminate possibilities
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				if (Sudoku[i][j] != 0) {
-					toSolve[i][j] = Integer.toString(Sudoku[i][j]);
+				if (Sudoku[i][j].getCurrentValue() != 0) {
+					toSolve[i][j] = Integer.toString(Sudoku[i][j].getCurrentValue());
 				}
 			}
 		}
 		
+		//deep copy toSolve
+		String[][] toCheck = new String[9][9];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				toCheck[i][j] = toSolve[i][j];
+			}
+		}
+		
 		//looks for obvious solution
-		if (search(toSolve.clone()) == true) {
+		if (search(toCheck) == true) {
 			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
 			return move;
 		}
 		
-		
 		System.out.println("Couldn't find an obvious solution, proceeding to do backtracking dfs:");
 		System.out.println("");
 		
+		int[][] toSearch = new int[9][9];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (Sudoku[i][j].getCurrentValue() != 0) {
+					toSearch[i][j] = Sudoku[i][j].getCurrentValue();
+				}
+			}
+		}
+		
+		
 		//backtracking dfs
-		solve(0, Sudoku);
-		
-		printSolved(Sudoku);
-		
-		System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
-		return move;
+		if (solve(0, toSearch)) {
+			//if can find a solution, return hint from first branch state used
+			printSolved(toSearch);
+			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
+			return move;
+		}
+		//if can't find obvious hint or possible solution, returns null
+		return null;
 	}
 	
 	
-	/*
-		The below 3 functions was taken from online example - link is...
-		For backtracking dfs when can't find obvious solution
-	*/
-			 
+	/**
+	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
+	 * Written by Bob Carpenter
+	 * Finds the next position to check
+	 * @param p the position
+	 * @return the next position
+	 */
 	private int nextPosition (int p) {
-
 		// position p is an integer: -1 means no more positions, otherwise, it stores 
 		//   both the row and column of a position:
 		//   the lowest 4 bits are the column number and the next 4 bits are row number
@@ -121,6 +150,14 @@ public class HintSystem {
 		return (i+1)<< 4;        // increase i by 1 and set j = 0
 	}
 
+	/**
+	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
+	 * Written by Bob Carpenter
+	 * A backtracking dfs for when we can't find obvious solution
+	 * @param p
+	 * @param cells
+	 * @return
+	 */
 	private boolean solve(int p, int[][] cells) {
 		// recursive backtrack search.
 
@@ -150,6 +187,16 @@ public class HintSystem {
 		return false;
 	}
 
+	/**
+	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
+	 * Written by Bob Carpenter
+	 * Checks if move is legal
+	 * @param i the y position
+	 * @param j the x position
+	 * @param val the value
+	 * @param cells the board
+	 * @return
+	 */
 	static boolean legal(int i, int j, int val, int[][] cells) {
 		// check if val is legal at cells[i][j].
 		for (int k = 0; k < 9; ++k)  // row
@@ -170,24 +217,25 @@ public class HintSystem {
 		return true; // no violations, so it's legal
 	}
 	
-    /*
-    End of copied code
-    */
-	
-    /*
-    Below this is own code - thus the untidiness
-    Used to find obvious solution
-    */
-	
+	/**
+	 * Checks if there is an obvious hint to give
+	 * Changes the private Move object to hint if found
+	 * @param solve the board
+	 * @return true if yes, else false
+	 */
     private Boolean search (String[][] solve) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (solve[i][j].length() == 1) {
+					//System.out.println("curr is " + i + "y " + j + "x " + "value = " + solve[i][j]);
 					int value = Integer.parseInt(solve[i][j]);
 					Unit curr = new Unit(j, i);
 					ArrayList<Unit> list = curr.getPeers(curr);
 					for (Unit u : list) {
+						//System.out.println("check solve " + i + "y " + j + "x " + "value = " + value);
+						//System.out.println("old solve " + u.getX() + "x " + u.getY() + "y " + solve[u.getY()][u.getX()]);
 						solve[u.getY()][u.getX()] = solve[u.getY()][u.getX()].replace(Integer.toString(value), "");
+						//System.out.println("new solve " + u.getX() + "x " + u.getY() + "y " + solve[u.getY()][u.getX()]);
 					}
 				}
 			}
@@ -201,6 +249,7 @@ public class HintSystem {
 		//Rule 1: if square with 1 possibility, found hint to give
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
+				//System.out.println(j + "x " + i + "y toSolve " + toSolve[i][j] + " toCheck " + toCheck[i][j]);
 				if (toCheck[i][j].length() == 1 && 
 						Integer.parseInt(toSolve[i][j]) != 
 						Integer.parseInt(toCheck[i][j])) {
@@ -247,6 +296,26 @@ public class HintSystem {
 		return buffer;
 	}
 	
+	private void print(Square[][] solved) {
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				//if (j == 3 || j == 6 || j == 9) {
+					//System.out.print("\n");
+				//}
+				System.out.print(solved[i][j].getCurrentValue() + " ");
+				if (j == 2 || j == 5) {
+					System.out.print(" ");
+				}
+				if (j == 8) {
+					System.out.print(" \n");
+				}
+			}
+			if (i == 2 || i == 5 || i == 8) {
+				System.out.print("\n");
+			}
+		}
+	}
+	
 	private void printSolved(int[][] solved) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -266,5 +335,4 @@ public class HintSystem {
 			}
 		}
 	}
-	
 }

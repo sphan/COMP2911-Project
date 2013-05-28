@@ -34,7 +34,7 @@ public class Unit {
 		}
 		for (int i = 0; i < 9; i++) {
 			if (i != a.getY()) {
-				toReturn.add(new Unit(i, a.getX()));
+				toReturn.add(new Unit(a.getX(), i));
 			}
 		}
 		int first = a.getX()/3;
