@@ -7,6 +7,7 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+
 public class GameInterface {
 	static JFrame frame;
 	static Container pane;
@@ -151,10 +152,11 @@ public class GameInterface {
 	
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
-		if (boardLayout[inputX][inputY].getCurrentValue() > 0){
-			source.setText(Integer.toString(boardLayout[inputX][inputY].getCurrentValue()));
+		//If there is a set value for the square, set it to that
+		if (boardLayout[inputY][inputX].getCurrentValue() > 0){
+			source.setText(Integer.toString(boardLayout[inputY][inputX].getCurrentValue()));
 		} else {
-			Square tempDraft = boardLayout[inputX][inputY];
+			Square tempDraft = boardLayout[inputY][inputX];
 			Integer x = 0;
 			String boxString = "";
 			while (x < 9){
@@ -232,10 +234,7 @@ public class GameInterface {
 			//source.setForeground(defaultBGColor);
 			
 			System.out.println("square selected " + squareX + " " + squareY);
-			
-			if (source != null){
-				source.setText("");
-			}
+			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
 			source = (JButton) e.getSource();
 			inputX = squareX;
 			inputY = squareY;
@@ -262,38 +261,38 @@ public class GameInterface {
 
 		public void keyReleased(KeyEvent e) {}
 
+		//When a key is typed
 		public void keyTyped(KeyEvent e) {
 			System.out.println("Key Typed " + e.getKeyChar());
-			if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL){
+			char key = e.getKeyChar();
+			//if the square selected isn't a predefined cell
+			if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && Character.isDigit(key)){
 				int number = 0;
 				boolean shift = false;
-				Scanner toInt = new Scanner(e.toString());
-				try{
-					number = toInt.nextInt();
-					if (e.isShiftDown()){
-						shift = true;
-					}
-				} catch (Exception error){
+				// If shift is pressed, set shift to true
+				if (e.isShiftDown()){
 					shift = true;
-					if (e.getKeyChar() == '!'){
-						number = 1;
-					} else if (e.getKeyChar() == '@'){
-						number = 2;
-					} else if (e.getKeyChar() == '#'){
-						number = 3;
-					} else if (e.getKeyChar() == '$'){
-						number = 4;
-					} else if (e.getKeyChar() == '%'){
-						number = 5;
-					} else if (e.getKeyChar() == '^'){
-						number = 6;
-					} else if (e.getKeyChar() == '&'){
-						number = 7;
-					} else if (e.getKeyChar() == '*'){
-						number = 8;
-					} else if (e.getKeyChar() == '('){
-						number = 9;
-					}
+					System.out.println("SHIFT");
+				}
+				// then work out what number is pressed
+				if (key == '!' || key == '1'){
+					number = 1;
+				} else if (key == '@' || key == '2'){
+					number = 2;
+				} else if (key == '#' || key == '3'){
+					number = 3;
+				} else if (key == '$' || key == '4'){
+					number = 4;
+				} else if (key == '%' || key == '5'){
+					number = 5;
+				} else if (key == '^' || key == '6'){
+					number = 6;
+				} else if (key == '&' || key == '7'){
+					number = 7;
+				} else if (key == '*' || key == '8'){
+					number = 8;
+				} else if (key == '(' || key == '9'){
+					number = 9;
 				}
 				if (shift){
 					boardLayout[row][column].switchDraftValue(number);
@@ -301,6 +300,8 @@ public class GameInterface {
 					boardLayout[row][column].setCurrentValue(number);
 				}
 				resetSourceBox();
+			} else if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
+				
 			}
 			
 
@@ -308,9 +309,6 @@ public class GameInterface {
 		}
 		
 	}
-	
-	//TODO Action Listener to tell if a number has been pressed and if so, what square to put it in
-	//TODO Expansion on that, send the number to the actual board thing.
-	
+		
 	//NOTE: if you're looking for private variables, they're above the Action Listeners
 }
