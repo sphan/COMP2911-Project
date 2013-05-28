@@ -30,13 +30,13 @@ public class HintSystem {
 	 * @return a move with hint if found, else null
 	 */
 	public Move Hint (Square[][] Sudoku) {
-		int[][] Sudoku1 = new int[9][9]; 
+		//int[][] Sudoku1 = new int[9][9]; 
 		
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				Sudoku1[i][j] = 0;
-			}
-		}
+		//for (int i = 0; i < 9; i++) {
+			//for (int j = 0; j < 9; j++) {
+				//Sudoku1[i][j] = 0;
+			//}
+		//}
 		/*
 		Sudoku1[0][0] = 5;
 		Sudoku1[0][1] = 3;

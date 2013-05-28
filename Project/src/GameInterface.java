@@ -17,6 +17,7 @@ public class GameInterface {
 	static JButton btnInputMode;
 	static JLabel lblInputLabel;
 	static JButton btnQuit;
+	static JButton btnHint;
 	//static Square[][] entry;
 	
 	
@@ -50,6 +51,11 @@ public class GameInterface {
 		btnInputMode.setBounds(10, frameHeight - 60, btnInputMode.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		lblInputLabel.setBounds(10, frameHeight - 80, lblInputLabel.getPreferredSize().width, lblInputLabel.getPreferredSize().height);
 		btnInputMode.addActionListener(new btnInputModeListener());
+		
+		btnHint = new JButton("HINT");
+		pane.add(btnHint);
+		btnHint.setBounds(360, frameHeight - 60, btnHint.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
+		btnHint.addActionListener(new btnHintListener());
 		
 		btnQuit = new JButton("QUIT");
 		pane.add(btnQuit);
@@ -215,6 +221,27 @@ public class GameInterface {
 	public static class btnQuitListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public static class btnHintListener implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			HintSystem h = new HintSystem();
+			Move newMove = h.Hint(boardLayout);
+			if (newMove.getValue() != 0) {
+				boardLayout[newMove.getY()][newMove.getX()].setCurrentValue(newMove.getValue());
+				System.out.println("board val is " + boardLayout[newMove.getX()][newMove.getY()].getCurrentValue());
+				inputX = newMove.getX();
+				inputY = newMove.getY();
+				source = box[inputX][inputY];
+				Color hintColor = new Color(102, 255, 178);
+				source.setForeground(hintColor);
+				//source.setBackground(new Color(255,255,255));
+				resetSourceBox();
+			}
 		}
 	}
 	
