@@ -180,7 +180,7 @@ public class Puzzle {
 			int j = rand.nextInt(ROW_NUMBER);
 			int k = rand.nextInt(COLUMN_NUMBER);
 			if (puzzle[j][k].getCurrentValue() == 0 && 
-					puzzle[j][k].getType() == Square.USER_INPUT_CELL) {
+					puzzle[j][k].getType() == Square.EMPTY_CELL) {
 				i--;
 				continue;
 			}
