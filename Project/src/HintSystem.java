@@ -37,6 +37,7 @@ public class HintSystem {
 				Sudoku1[i][j] = 0;
 			}
 		}
+		/*
 		Sudoku1[0][0] = 5;
 		Sudoku1[0][1] = 3;
 		Sudoku1[1][0] = 6;
@@ -70,16 +71,13 @@ public class HintSystem {
 		
 		//Sudoku1[0][2] = 4;
 		//Re-enable this to find an obvious solution
+		*/
+		//test Sudoku
 		
 		//Addressed as Sudoku1[y][x]
 		
-		//disable to test with actual input
+		//disable below to test with actual input
 		//Sudoku = Sudoku1;
-		
-		
-		//has unit 0 - 8
-		//each unit has 0 - 8 squares
-		//has 81 squares
 		
 		//prints original sudoku
 		print(Sudoku);
@@ -227,11 +225,13 @@ public class HintSystem {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (solve[i][j].length() == 1) {
+					//for debugging
 					//System.out.println("curr is " + i + "y " + j + "x " + "value = " + solve[i][j]);
 					int value = Integer.parseInt(solve[i][j]);
 					Unit curr = new Unit(j, i);
 					ArrayList<Unit> list = curr.getPeers(curr);
 					for (Unit u : list) {
+						//print statements are for debugging
 						//System.out.println("check solve " + i + "y " + j + "x " + "value = " + value);
 						//System.out.println("old solve " + u.getX() + "x " + u.getY() + "y " + solve[u.getY()][u.getX()]);
 						solve[u.getY()][u.getX()] = solve[u.getY()][u.getX()].replace(Integer.toString(value), "");
@@ -245,10 +245,16 @@ public class HintSystem {
 		return false;
     }
 	
+    /**
+     * Checks if there are any hints possible from eliminating possiblities
+     * @param toCheck the board
+     * @return true or yes, else false
+     */
 	private Boolean checkPossibilities(String[][] toCheck) {
 		//Rule 1: if square with 1 possibility, found hint to give
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
+				//this printf is for debugging
 				//System.out.println(j + "x " + i + "y toSolve " + toSolve[i][j] + " toCheck " + toCheck[i][j]);
 				if (toCheck[i][j].length() == 1 && 
 						Integer.parseInt(toSolve[i][j]) != 
@@ -289,19 +295,25 @@ public class HintSystem {
 		return false;
 	}
 	
+	/**
+	 * Clears an array- sets all as 0
+	 * @param buffer the array
+	 * @param length length of array
+	 * @return array
+	 */
 	private int[] clearBuffer(int[] buffer, int length) {
 		for (int i = 0; i < length; i++) {
 			buffer[i] = 0;
 		}
 		return buffer;
 	}
-	
+	/**
+	 * Prints the board given
+	 * @param solved the board
+	 */
 	private void print(Square[][] solved) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				//if (j == 3 || j == 6 || j == 9) {
-					//System.out.print("\n");
-				//}
 				System.out.print(solved[i][j].getCurrentValue() + " ");
 				if (j == 2 || j == 5) {
 					System.out.print(" ");
@@ -316,12 +328,13 @@ public class HintSystem {
 		}
 	}
 	
+	/**
+	 * Prints own board used
+	 * @param solved board used
+	 */
 	private void printSolved(int[][] solved) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				//if (j == 3 || j == 6 || j == 9) {
-					//System.out.print("\n");
-				//}
 				System.out.print(solved[i][j] + " ");
 				if (j == 2 || j == 5) {
 					System.out.print(" ");
