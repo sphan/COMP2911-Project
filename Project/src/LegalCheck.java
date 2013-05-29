@@ -1,5 +1,9 @@
 import java.util.LinkedList;
 
+//TODO BUG!!! If a number in a square is changed to the same number (e.g. click on a user square with 6 and type 6)
+// or if a LegalCheck is done on a square after the number has been turned in
+// legal check returns illegal and the number will be turned red.
+
 /**
  * This class provides methods that are used
  * in checking if certain value has duplicates
@@ -32,7 +36,7 @@ public class LegalCheck {
 		if (legal == true) {
 			return true;
 		}
-		legal = hasDuplicateInBox(boxNum, val);
+		legal = hasDuplicateInBox(boxNum, val, s);
 		return legal;
 	}
 	
@@ -48,14 +52,14 @@ public class LegalCheck {
 		for (int i = 0; i < Puzzle.COLUMN_NUMBER; i++) {
 			if (puzzle[row][i].getType() == Square.EMPTY_CELL)
 				continue;
-			if (puzzle[row][i].getCurrentValue() == val)
+			if (puzzle[row][i].getCurrentValue() == val && i != column)
 				return true;
 		}
 		
 		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 			if (puzzle[i][column].getType() == Square.EMPTY_CELL)
 				continue;
-			if (puzzle[i][column].getCurrentValue() == val)
+			if (puzzle[i][column].getCurrentValue() == val && i != row)
 				return true;
 		}
 		
@@ -71,12 +75,12 @@ public class LegalCheck {
 	 * @return True if there is a duplicate in the region.
 	 * False otherwise.
 	 */
-	private static boolean hasDuplicateInBox(int boxNum, int val) {
+	private static boolean hasDuplicateInBox(int boxNum, int val, Square currentSquare) {
 		LinkedList<Square> list = getSquaresInRegion(boxNum);
 		for (Square s : list) {
 			if (s.getType() == Square.EMPTY_CELL)
 				continue;
-			if (s.getCurrentValue() == val)
+			if (s.getCurrentValue() == val && s != currentSquare)
 				return true;
 		}
 		return false;
