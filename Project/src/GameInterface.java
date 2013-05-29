@@ -1,13 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+
 public class GameInterface {
+	
 	static JFrame frame;
 	static Container pane;
 	//The boxes themselves
@@ -25,6 +25,15 @@ public class GameInterface {
 	//static final int subBoxWidth = 50;
 	static final int frameWidth = 600;
 	static final int frameHeight = 600;
+	static final Color PRESET_COLOR = new Color(140, 140, 140);
+	static final Color WRONG_COLOR = new Color(200, 140, 140);
+	static final Color USER_COLOR = new Color(255, 255, 255);
+	static final Color HINT_COLOR = new Color(230, 230, 230);
+	
+	static final Color PRESET_TEXT_COLOR = new Color(100, 100, 100);
+	static final Color WRONG_TEXT_COLOR = new Color(250, 150, 150);
+	static final Color USER_TEXT_COLOR = Color.BLACK;
+	static final Color HINT_TEXT_COLOR = new Color(150, 150, 250);
 	
 	public GameInterface(Square[][] newLayout){
 		boardLayout = newLayout;
@@ -77,7 +86,7 @@ public class GameInterface {
 	 * @return True if the board is completely filled and all values
 	 * are valid. False otherwise.
 	 */
-	public boolean hasWon() {
+	public static boolean hasWon() {
 		boolean boardFilled = false;
 		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 			for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
@@ -120,7 +129,9 @@ public class GameInterface {
 		return (source != null);
 	}
 
-	
+	/**
+	 * Sets all the starting boxes including their positions and initially set values
+	 */
 	private static void setStartingBoxInfo(){
 		int x = 0;
 		int y = 0;
@@ -131,12 +142,14 @@ public class GameInterface {
 				//subBox[x][y] = new JTextPane();
 				pane.add(box[x][y]);
 				//pane.add(subBox[x][y]);
-				box[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
+				box[x][y].setBounds(x*boxWidth+((Math.round(x/3)+1) * 10), y*boxHeight+((Math.round(y/3)+1) * 10), boxWidth, boxHeight);
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
 				value = boardLayout[y][x].getCurrentValue();
 				if (value != 0){
 					box[x][y].setText(value.toString());
+					box[x][y].setBackground(PRESET_COLOR);
+					box[x][y].setForeground(PRESET_TEXT_COLOR);
 				}
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
@@ -147,14 +160,78 @@ public class GameInterface {
 			y++;
 			x = 0;
 		}
+		
 	}
 	
+	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
+	// legal still leaves the number red
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
-		if (boardLayout[inputX][inputY].getCurrentValue() > 0){
-			source.setText(Integer.toString(boardLayout[inputX][inputY].getCurrentValue()));
+		int row = 0;
+		int col = 0;
+		int type = -1;
+		JButton currentBox = null;
+		Square currentSquare = null;
+		//for each square
+		while (row < 9){
+			while (col < 9){
+				currentSquare = boardLayout[row][col];
+				//if there is a set value for the square, set it to that
+				if (currentSquare.getCurrentValue() > 0){
+					currentBox = box[col][row];
+					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
+						currentSquare.setType(Square.ERROR_CELL);
+					} else {
+						currentSquare.setType(currentSquare.getPreviousType());
+					}
+					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
+					type = currentSquare.getType();
+					if (type == Square.USER_INPUT_CELL){
+						currentBox.setBackground(USER_COLOR);
+						currentBox.setForeground(USER_TEXT_COLOR);
+					} else if (type == Square.ERROR_CELL){
+						currentBox.setBackground(WRONG_COLOR);
+						currentBox.setForeground(WRONG_TEXT_COLOR);
+					} else if (type == Square.EMPTY_CELL){
+						currentBox.setBackground(USER_COLOR);
+					} else if (type == Square.HINT_CELL){
+						currentBox.setBackground(HINT_COLOR);
+						currentBox.setForeground(HINT_TEXT_COLOR);
+					}
+				} else {
+					Integer x = 0;
+					String boxString = "";
+					while (x < 9){
+						if (currentSquare.isMarkedDraft(x)){
+							boxString = (boxString + " " + x.toString());
+						}
+						x++;
+					}
+	
+				}
+				col++;
+			}
+			row++;
+			col = 0;
+		}
+		/*
+		//If there is a set value for the square, set it to that
+		if (boardLayout[inputY][inputX].getCurrentValue() > 0){
+			source.setText(Integer.toString(boardLayout[inputY][inputX].getCurrentValue()));
+			if (boardLayout[inputY][inputX].getType() == Square.USER_INPUT_CELL){
+				source.setBackground(USER_COLOR);
+				source.setForeground(USER_TEXT_COLOR);
+			} else if (boardLayout[inputY][inputX].getType() == Square.ERROR_CELL){
+				source.setBackground(WRONG_COLOR);
+				source.setForeground(WRONG_TEXT_COLOR);
+			} else if (boardLayout[inputY][inputX].getType() == Square.EMPTY_CELL){
+				source.setBackground(USER_COLOR);
+			} else if (boardLayout[inputY][inputX].getType() == Square.HINT_CELL){
+				source.setBackground(HINT_COLOR);
+				source.setForeground(HINT_TEXT_COLOR);
+			}
 		} else {
-			Square tempDraft = boardLayout[inputX][inputY];
+			Square tempDraft = boardLayout[inputY][inputX];
 			Integer x = 0;
 			String boxString = "";
 			while (x < 9){
@@ -164,6 +241,10 @@ public class GameInterface {
 				x++;
 			}
 			source.setText(boxString);
+		}
+		*/
+		if (hasWon()){
+			System.out.println("CONGRATULATIONS YOU WON!!!");
 		}
 		pane.repaint();
 
@@ -232,10 +313,7 @@ public class GameInterface {
 			//source.setForeground(defaultBGColor);
 			
 			System.out.println("square selected " + squareX + " " + squareY);
-			
-			if (source != null){
-				source.setText("");
-			}
+			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
 			source = (JButton) e.getSource();
 			inputX = squareX;
 			inputY = squareY;
@@ -262,55 +340,62 @@ public class GameInterface {
 
 		public void keyReleased(KeyEvent e) {}
 
+		//When a key is typed
 		public void keyTyped(KeyEvent e) {
 			System.out.println("Key Typed " + e.getKeyChar());
-			if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL){
+			char key = e.getKeyChar();
+			//if the square selected isn't a predefined cell
+			if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && Character.isDigit(key)){
 				int number = 0;
 				boolean shift = false;
-				Scanner toInt = new Scanner(e.toString());
-				try{
-					number = toInt.nextInt();
-					if (e.isShiftDown()){
-						shift = true;
-					}
-				} catch (Exception error){
+				// If shift is pressed, set shift to true
+				if (e.isShiftDown()){
 					shift = true;
-					if (e.getKeyChar() == '!'){
-						number = 1;
-					} else if (e.getKeyChar() == '@'){
-						number = 2;
-					} else if (e.getKeyChar() == '#'){
-						number = 3;
-					} else if (e.getKeyChar() == '$'){
-						number = 4;
-					} else if (e.getKeyChar() == '%'){
-						number = 5;
-					} else if (e.getKeyChar() == '^'){
-						number = 6;
-					} else if (e.getKeyChar() == '&'){
-						number = 7;
-					} else if (e.getKeyChar() == '*'){
-						number = 8;
-					} else if (e.getKeyChar() == '('){
-						number = 9;
-					}
+					System.out.println("SHIFT");
+				}
+				// then work out what number is pressed
+				if (key == '!' || key == '1'){
+					number = 1;
+				} else if (key == '@' || key == '2'){
+					number = 2;
+				} else if (key == '#' || key == '3'){
+					number = 3;
+				} else if (key == '$' || key == '4'){
+					number = 4;
+				} else if (key == '%' || key == '5'){
+					number = 5;
+				} else if (key == '^' || key == '6'){
+					number = 6;
+				} else if (key == '&' || key == '7'){
+					number = 7;
+				} else if (key == '*' || key == '8'){
+					number = 8;
+				} else if (key == '(' || key == '9'){
+					number = 9;
 				}
 				if (shift){
 					boardLayout[row][column].switchDraftValue(number);
 				} else {
+					//boolean illegal = LegalCheck.checkLegal(boardLayout, boardLayout[row][column], number);
 					boardLayout[row][column].setCurrentValue(number);
+					//if (!illegal){
+					//	boardLayout[row][column].setType(Square.USER_INPUT_CELL);
+					//} else {
+					//	boardLayout[row][column].setType(Square.ERROR_CELL);
+					//	System.out.println(" WRONG!!!!!!!!!");
+					//}
 				}
-				resetSourceBox();
+			} else if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
+				boardLayout[row][column].setType(Square.EMPTY_CELL);
+				boardLayout[row][column].setCurrentValue(0);
 			}
+			resetSourceBox();
 			
 
 			
 		}
 		
 	}
-	
-	//TODO Action Listener to tell if a number has been pressed and if so, what square to put it in
-	//TODO Expansion on that, send the number to the actual board thing.
-	
+		
 	//NOTE: if you're looking for private variables, they're above the Action Listeners
 }
