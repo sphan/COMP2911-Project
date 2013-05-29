@@ -1,3 +1,5 @@
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -22,6 +24,8 @@ public class Puzzle {
 		initialisePuzzle();
 		generatePuzzle();
 		printPuzzle();
+		Calendar start = Calendar.getInstance();
+		calculateTimeElapse(start);
 		return puzzle;
 	}
 	
@@ -188,6 +192,16 @@ public class Puzzle {
 			puzzle[j][k].setType(Square.USER_INPUT_CELL);
 			puzzle[j][k].resetTrackingValues();
 		}
+	}
+	
+	public static long calculateTimeElapse(Calendar startTime) {
+		Calendar endTime = Calendar.getInstance();
+		Date st = startTime.getTime();
+		Date et = endTime.getTime();
+		long ls = st.getTime();
+		long le = et.getTime();
+		long diff = (le - ls) / 1000;
+		return diff;
 	}
 	
 	// levels of difficulty (not sure where to place them yet).
