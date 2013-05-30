@@ -21,6 +21,7 @@ public class Square {
 	public Square(int boxNum, int type) {
 		this.threeByThreeBoxIndex = boxNum;
 		this.type = type;
+		this.prevType = EMPTY_CELL;
 		this.availableValues = new LinkedList<Integer>();
 		this.usedValues = new LinkedList<Integer>();
 		
@@ -78,7 +79,12 @@ public class Square {
 	 * @param squareType
 	 */
 	public void setType(int squareType) {
-		this.type = squareType;
+		if (this.type != squareType){
+			if (squareType == ERROR_CELL){
+				this.prevType = this.type;
+			}
+			this.type = squareType;
+		}
 	}
 	
 	/**
@@ -167,6 +173,10 @@ public class Square {
 		return this.type;
 	}
 	
+	public int getPreviousType(){
+		return this.prevType;
+	}
+	
 	private int row;
 	private int column;
 	private int threeByThreeBoxIndex;
@@ -175,6 +185,7 @@ public class Square {
 	//0 for empty
 	private int currentValue;
 	private int type;
+	private int prevType;
 	private LinkedList<Integer> availableValues;
 	private LinkedList<Integer> usedValues;
 	public static final int EMPTY_CELL = 0;
