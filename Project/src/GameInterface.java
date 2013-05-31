@@ -6,7 +6,10 @@ import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-
+/**
+ * A class to display the user interface for the board to allow play
+ * @author Sam
+ */
 public class GameInterface {
 	
 	static JFrame frame;
@@ -39,6 +42,10 @@ public class GameInterface {
 	static final Color USER_TEXT_COLOR = Color.BLACK;
 	static final Color HINT_TEXT_COLOR = new Color(150, 150, 250);
 	
+	/**
+	 * Constructor that creates a new gui of a game board
+	 * @param newLayout
+	 */
 	public GameInterface(Square[][] newLayout){
 		boardLayout = newLayout;
 		
@@ -48,20 +55,24 @@ public class GameInterface {
 		
 		pane.setLayout(null);
 		
+		//sudoku board
 		box = new JButton[9][9];
 		//Get it so that I take this from the puzzle
 		//entry = new Square[9][9];
 		//subBox = new JTextPane[9][9];
 		setStartingBoxInfo();
 		
+		//timer label
 		timerLabel = new JLabel("Elapsed Time");
 		pane.add(timerLabel);
 		timerLabel.setBounds(20, frameHeight - 120, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
 		
+		//timer label
 		elapseTimer = new JLabel("00:00");
 		pane.add(elapseTimer);
 		elapseTimer.setBounds(30, frameHeight - 100, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
 		
+		//entry mode toggle button
 		btnInputMode = new JButton("Entry Mode");
 		lblInputLabel = new JLabel("Current Writing Mode Click or hold Shift to change");
 		pane.add(btnInputMode);
@@ -70,11 +81,13 @@ public class GameInterface {
 		lblInputLabel.setBounds(10, frameHeight - 80, lblInputLabel.getPreferredSize().width, lblInputLabel.getPreferredSize().height);
 		btnInputMode.addActionListener(new btnInputModeListener());
 		
+		//hint button
 		btnHint = new JButton("HINT");
 		pane.add(btnHint);
 		btnHint.setBounds(360, frameHeight - 60, btnHint.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		btnHint.addActionListener(new btnHintListener());
 		
+		//quit button
 		btnQuit = new JButton("QUIT");
 		pane.add(btnQuit);
 		btnQuit.setBounds(200, frameHeight - 60, btnQuit.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
@@ -128,6 +141,9 @@ public class GameInterface {
 		return true;
 	}
 	
+	/**
+	 * Function to update the timer with how much time has elapsed
+	 */
 	public void updateTimer() {
 		int hour, minute, sec;
 		while (!hasWon()) {
@@ -195,6 +211,9 @@ public class GameInterface {
 		
 	}
 	
+	/**
+	 * Function to update the display of the board when elements within it have changed
+	 */
 	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
 	// legal still leaves the number red
 	private static void resetSourceBox(){
@@ -332,13 +351,13 @@ public class GameInterface {
 	}
 	
 	/**
-	 * 
+	 * Action Listener to provide a hint when a user desires such
 	 */
 	public static class btnHintListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			HintSystem h = new HintSystem();
 			Move newMove = h.Hint(boardLayout);
-			if (newMove.getValue() != 0) {
+			if (newMove != null && newMove.getValue() != 0) {
 				boardLayout[newMove.getY()][newMove.getX()].setCurrentValue(newMove.getValue());
 				System.out.println("board val is " + boardLayout[newMove.getX()][newMove.getY()].getCurrentValue());
 				inputX = newMove.getX();
@@ -346,7 +365,6 @@ public class GameInterface {
 				source = box[inputX][inputY];
 				Color hintColor = new Color(102, 255, 178);
 				source.setForeground(hintColor);
-				//source.setBackground(new Color(255,255,255));
 				resetSourceBox();
 			}
 		}
