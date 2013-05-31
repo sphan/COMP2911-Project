@@ -290,7 +290,8 @@ public class GameInterface {
 					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
 					} else {
-						currentSquare.setType(currentSquare.getPreviousType());
+						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
+							currentSquare.setType(currentSquare.getPreviousType());
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType();
@@ -520,11 +521,7 @@ public class GameInterface {
 				boardLayout[row][column].setCurrentValue(0);
 			}
 			resetSourceBox();
-			
-
-			
 		}
-		
 	}
 		
 	//NOTE: if you're looking for private variables, they're above the Action Listeners
