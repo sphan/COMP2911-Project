@@ -30,14 +30,15 @@ public class HintSystem {
 	 * @return a move with hint if found, else null
 	 */
 	public Move Hint (Square[][] Sudoku) {
-		//int[][] Sudoku1 = new int[9][9]; 
-		
-		//for (int i = 0; i < 9; i++) {
-			//for (int j = 0; j < 9; j++) {
-				//Sudoku1[i][j] = 0;
-			//}
-		//}
 		/*
+		int[][] Sudoku1 = new int[9][9]; 
+		
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				Sudoku1[i][j] = 0;
+			}
+		}
+		
 		Sudoku1[0][0] = 5;
 		Sudoku1[0][1] = 3;
 		Sudoku1[1][0] = 6;
@@ -82,14 +83,23 @@ public class HintSystem {
 		//prints original sudoku
 		print(Sudoku);
 		
+		//a boolean to check if board is filled
+		Boolean check = false;
+		
 		//sets up grid to eliminate possibilities
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (Sudoku[i][j].getCurrentValue() != 0) {
 					toSolve[i][j] = Integer.toString(Sudoku[i][j].getCurrentValue());
+				} else {
+					check = true;
 				}
 			}
 		}
+		
+		//checks if board is filled
+		if (check == false) 
+			return null;
 		
 		//deep copy toSolve
 		String[][] toCheck = new String[9][9];
@@ -99,11 +109,15 @@ public class HintSystem {
 			}
 		}
 		
+		
+		
 		//looks for obvious solution
 		if (search(toCheck) == true) {
 			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
 			return move;
 		}
+		
+		
 		
 		System.out.println("Couldn't find an obvious solution, proceeding to do backtracking dfs:");
 		System.out.println("");
@@ -125,6 +139,8 @@ public class HintSystem {
 			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
 			return move;
 		}
+		System.out.println("Darn");
+		
 		//if can't find obvious hint or possible solution, returns null
 		return null;
 	}
@@ -148,6 +164,7 @@ public class HintSystem {
 		return (i+1)<< 4;        // increase i by 1 and set j = 0
 	}
 
+	
 	/**
 	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
 	 * Written by Bob Carpenter
@@ -184,7 +201,7 @@ public class HintSystem {
 		cells[i][j] = 0; // reset on backtrack
 		return false;
 	}
-
+	
 	/**
 	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
 	 * Written by Bob Carpenter
