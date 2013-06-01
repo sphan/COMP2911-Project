@@ -32,11 +32,12 @@ public class LegalCheck {
 		int boxNum = s.getThreeByThreeBox();
 		boolean legal = false;
 		
-		legal = hasDuplicate(row, column, val);	
-		if (legal == true) {
-			return true;
+		if (val != 0) {
+			legal = hasDuplicate(row, column, val);	
+			if (legal == true)
+				return true;
+			legal = hasDuplicateInBox(boxNum, val, s);
 		}
-		legal = hasDuplicateInBox(boxNum, val, s);
 		return legal;
 	}
 	

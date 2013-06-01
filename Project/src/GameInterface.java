@@ -155,7 +155,7 @@ public class GameInterface {
 		if (boardFilled) {
 			for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
-					if (!LegalCheck.checkLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()))
+					if (LegalCheck.checkLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()) == false)
 						return false;
 				}
 			}
@@ -307,16 +307,15 @@ public class GameInterface {
 			while (col < 9){
 				currentSquare = boardLayout[row][col];
 				//if there is a set value for the square, set it to that
-				if (currentSquare.getCurrentValue() > 0){
+				if (currentSquare.getCurrentValue() >= 0){
 					currentBox = box[col][row];
+					
 					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
-						
 					} else {
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
-//						if (currentSquare.getType() == Square.ERROR_CELL)
-//							currentSquare.setType(currentSquare.getPreviousType());
+						
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType();
@@ -335,6 +334,8 @@ public class GameInterface {
 						currentBox.setBackground(PRESET_COLOR);
 						currentBox.setForeground(PRESET_TEXT_COLOR);
 					}
+					if (currentSquare.getCurrentValue() == 0)
+						currentBox.setText("");
 				} else {
 					Integer x = 0;
 					String boxString = "";
@@ -469,12 +470,12 @@ public class GameInterface {
 		
 		public void actionPerformed(ActionEvent e){
 			//source.setForeground(defaultBGColor);
-			
 			System.out.println("square selected " + squareX + " " + squareY);
 			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
 			source = (JButton) e.getSource();
 			inputX = squareX;
 			inputY = squareY;
+//			source.setBackground(Color.green);
 			//source.setText(inputX + " " + inputY);
 			//source.setForeground(selectedBGColor);
 		}
