@@ -225,7 +225,8 @@ public class GameInterface {
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
 				value = boardLayout[y][x].getCurrentValue();
-				box[x][y].setBackground(Color.white); //sets the look
+				box[x][y].setBackground(Color.white); 
+				//sets the look
 				if (value != 0){
 					box[x][y].setText(value.toString());
 					box[x][y].setBackground(PRESET_COLOR);
@@ -251,7 +252,7 @@ public class GameInterface {
 	private static void loadImages() {
 		imageValue = new BufferedImage[10];
 		imageSelectedValue = new BufferedImage[10];
-		try {
+		try { //tries to load image files for each square type
 			System.out.println("Attempt to load images");
 			imageValue[0] = ImageIO.read(new File("ProjectPics/Invisible/blank.png"));
 			System.out.print("*");
@@ -301,6 +302,9 @@ public class GameInterface {
 	
 	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
 	// legal still leaves the number red
+	/**
+	 * Updates the gui display of the board when the board has changed
+	 */
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
 		int row = 0;
@@ -315,15 +319,16 @@ public class GameInterface {
 				//if there is a set value for the square, set it to that
 				if (currentSquare.getCurrentValue() >= 0){
 					currentBox = box[col][row];
-					
+					//if not legal, set the look
 					if (LegalCheck.isNotLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
 					} else {
+						//if legal, and predefined cell, set it to that type
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
-					type = currentSquare.getType();
+					type = currentSquare.getType(); //sets the look for various square types
 					if (type == Square.USER_INPUT_CELL){
 						currentBox.setBackground(USER_COLOR);
 						currentBox.setForeground(USER_TEXT_COLOR);
@@ -341,11 +346,11 @@ public class GameInterface {
 						currentBox.setForeground(PRESET_TEXT_COLOR);
 					}
 					if (currentSquare.getCurrentValue() == 0)
-						currentBox.setText("");
+						currentBox.setText(""); //if empty cell, display it as such
 				} else {
 					Integer x = 0;
 					String boxString = "";
-					while (x < 9){
+					while (x < 9){ //displays the draft cell
 						if (currentSquare.isMarkedDraft(x)){
 							boxString = (boxString + " " + x.toString());
 						}
@@ -387,9 +392,11 @@ public class GameInterface {
 			source.setText(boxString);
 		}
 		*/
+		//checks if game has been won
 		if (hasWon()){
 			System.out.println("CONGRATULATIONS YOU WON!!!");
 		}
+		//update the display
 		pane.repaint();
 
 	}
@@ -415,16 +422,18 @@ public class GameInterface {
 	 * @author Sam
 	 */
 	public static class btnInputModeListener implements ActionListener{
-
+		/**
+		 * Function to change input mode when button is pressed
+		 */
 		public void actionPerformed(ActionEvent e) {
 			if (draftEntry == true){
-				btnInputMode.setText("Entry Mode");
-				draftEntry = false;
+				btnInputMode.setText("Entry Mode"); //changes the text
+				draftEntry = false; //changes the mode
 				deselectAll();
 				//switchEntryMode();
 			} else {
-				btnInputMode.setText("Draft Notes Mode");
-				draftEntry = true;
+				btnInputMode.setText("Draft Notes Mode"); //changes the text
+				draftEntry = true; //changes the mode
 				deselectAll();
 				//switchEntryMode();
 			}
@@ -437,6 +446,9 @@ public class GameInterface {
 	 * @author Sam
 	 */
 	public static class btnQuitListener implements ActionListener{
+		/**
+		 * Function to quit when button is pressed
+		 */
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
 		}
@@ -446,19 +458,27 @@ public class GameInterface {
 	 * Action Listener to provide a hint when a user desires such
 	 */
 	public static class btnHintListener implements ActionListener{
+		/**
+		 * Function to provide a hint when button is pressed
+		 */
 		public void actionPerformed(ActionEvent e){
-			if (hasWon())
+			if (hasWon()) //if game is won, do nothing
 				return;
+			//creates new hint system and uses it to find hint from current board
 			HintSystem h = new HintSystem();
 			Move newMove = h.Hint(boardLayout);
+			//checks to see if move is valid
 			if (newMove != null && newMove.getValue() != 0) {
+				//sets the board value to hint
 				boardLayout[newMove.getY()][newMove.getX()].setCurrentValue(newMove.getValue());
-				System.out.println("board val is " + boardLayout[newMove.getX()][newMove.getY()].getCurrentValue());
+				//set what has changed
 				inputX = newMove.getX();
 				inputY = newMove.getY();
 				source = box[inputX][inputY];
+				//sets the color of the hint cell
 				Color hintColor = new Color(102, 255, 178);
 				source.setForeground(hintColor);
+				//updates the display
 				resetSourceBox();
 			}
 		}
@@ -471,16 +491,24 @@ public class GameInterface {
 	public static class btnSquareListener implements ActionListener{
 		int squareX, squareY;
 		
+		/**
+		 * Constructor to create a new square listener
+		 * @param x the x coor
+		 * @param y the y coor
+		 */
 		public btnSquareListener(int x, int y){
 			squareX = x;
 			squareY = y;
 		}
 		
+		/**
+		 * Function to update input when square has been selected
+		 */
 		public void actionPerformed(ActionEvent e){
 			//source.setForeground(defaultBGColor);
 			System.out.println("square selected " + squareX + " " + squareY);
 			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
-			source = (JButton) e.getSource();
+			source = (JButton) e.getSource(); //sets the square selection as the source
 			inputX = squareX;
 			inputY = squareY;
 //			source.setBackground(Color.green);
@@ -497,7 +525,11 @@ public class GameInterface {
 		private int row;
 		private int column;
 		
-		
+		/**
+		 * Creates a new action listener for the key
+		 * @param row x coor
+		 * @param col y coor
+		 */
 		public keyPressedListener(int row, int col){
 			this.row = row;
 			this.column = col;
@@ -507,7 +539,9 @@ public class GameInterface {
 
 		public void keyReleased(KeyEvent e) {}
 
-		//When a key is typed
+		/**
+		 * Function to update the display when an input is received
+		 */
 		public void keyTyped(KeyEvent e) {
 			System.out.println("Key Typed " + e.getKeyChar());
 			char key = e.getKeyChar();
@@ -540,9 +574,9 @@ public class GameInterface {
 				} else if (key == '(' || key == '9'){
 					number = 9;
 				}
-				if (shift){
+				if (shift){ //if shift is pressed, change to draft move
 					boardLayout[row][column].switchDraftValue(number);
-				} else {
+				} else { //sets the value of the square to input
 					//boolean illegal = LegalCheck.checkLegal(boardLayout, boardLayout[row][column], number);
 					boardLayout[row][column].setCurrentValue(number);
 					//if (!illegal){
@@ -552,6 +586,7 @@ public class GameInterface {
 					//	System.out.println(" WRONG!!!!!!!!!");
 					//}
 				}
+				//deletes the current value depending on input
 			} else if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
 				boardLayout[row][column].setType(Square.EMPTY_CELL);
 				boardLayout[row][column].setCurrentValue(0);
