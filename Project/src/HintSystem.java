@@ -182,14 +182,12 @@ public class HintSystem {
 			for (int j = 0; j < 9; j++) {
 				System.out.println("Checking " + j + "x " + i + "y " + solve[i][j]);
 				if (solve[i][j].length() == 1) {
-					//System.out.println("Checking " + j + "x " + i + "y " + solve[i][j]);
 					//gets all the values so far
 					int value = Integer.parseInt(solve[i][j]);
 					//gets the peers
 					Unit curr = new Unit(j, i);
 					ArrayList<Unit> list = curr.getPeers(curr);
 					for (Unit u : list) { //eliminates the values on all of the unit's peers
-						//System.out.println("Eliminate " + u.getX() + "x " + u.getY() + "y " + value);
 						solve[u.getY()][u.getX()] = solve[u.getY()][u.getX()].replace(Integer.toString(value), "");
 					}
 				}
@@ -212,7 +210,6 @@ public class HintSystem {
 				if (toCheck[i][j].length() == 1 && 
 						Integer.parseInt(toSolve[i][j]) != Integer.parseInt(toCheck[i][j])) {
 					//for all on board if just 1 value and it is not a given, return that as hint
-					System.out.println("Found " + j + "x " + i + "y " + Integer.parseInt(toCheck[i][j]) + "value");
 					move.setX(j);
 					move.setY(i);
 					move.setValue(Integer.parseInt(toCheck[i][j]));
