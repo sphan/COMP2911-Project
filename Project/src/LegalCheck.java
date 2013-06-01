@@ -25,20 +25,20 @@ public class LegalCheck {
 	 * @return True if there is a duplicate in any direction,
 	 * and false otherwise.
 	 */
-	public static boolean checkLegal(Square[][] p, Square s, int val) {
+	public static boolean isNotLegal(Square[][] p, Square s, int val) {
 		puzzle = p;
 		int row = s.getRow();
 		int column = s.getColumn();
 		int boxNum = s.getThreeByThreeBox();
-		boolean legal = false;
-		
+		boolean duplicated = false;
+
 		if (val != 0) {
-			legal = hasDuplicate(row, column, val);	
-			if (legal == true)
+			duplicated = hasDuplicate(row, column, val);	
+			if (duplicated == true)
 				return true;
-			legal = hasDuplicateInBox(boxNum, val, s);
+			duplicated = hasDuplicateInBox(boxNum, val, s);
 		}
-		return legal;
+		return duplicated;
 	}
 	
 	/**
