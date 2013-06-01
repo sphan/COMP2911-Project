@@ -38,6 +38,7 @@ public class Square {
 	 */
 	public void resetTrackingValues() {
 		this.usedValues.clear();
+		this.availableValues.clear();
 		for (int i = 1; i <= 9; i++) {
 			availableValues.add(i);
 		}
