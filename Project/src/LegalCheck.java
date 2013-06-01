@@ -1,9 +1,3 @@
-import java.util.LinkedList;
-
-//TODO BUG!!! If a number in a square is changed to the same number (e.g. click on a user square with 6 and type 6)
-// or if a LegalCheck is done on a square after the number has been turned in
-// legal check returns illegal and the number will be turned red.
-
 /**
  * This class provides methods that are used
  * in checking if certain value has duplicates
@@ -29,27 +23,23 @@ public class LegalCheck {
 		puzzle = p;
 		int row = s.getRow();
 		int column = s.getColumn();
-		int boxNum = s.getThreeByThreeBox();
 		boolean duplicated = false;
 
-		if (val != 0) {
-			duplicated = hasDuplicate(row, column, val);	
-			if (duplicated == true)
-				return true;
-			duplicated = hasDuplicateInBox(boxNum, val, s);
-		}
+		if (val != 0) 
+			duplicated = hasDuplicate(row, column, val, s);	
 		return duplicated;
 	}
 	
 	/**
-	 * Check duplicates in rows and columns.
+	 * Check duplicates in rows and columns and 3x3 box.
 	 * @param row The row where the square belongs to.
 	 * @param column The column where the square belongs to.
 	 * @param val The value that is needed for duplicate checks.
 	 * @return True if there is a duplicate in current row or column.
 	 * False otherwise.
 	 */
-	private static boolean hasDuplicate(int row, int column, int val) {
+	private static boolean hasDuplicate(int row, int column, int val, Square currentSquare) {
+		// checks duplicates in row.
 		for (int i = 0; i < Puzzle.COLUMN_NUMBER; i++) {
 			if (puzzle[row][i].getType() == Square.EMPTY_CELL)
 				continue;
@@ -57,6 +47,7 @@ public class LegalCheck {
 				return true;
 		}
 		
+		// checks duplicates in column.
 		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 			if (puzzle[i][column].getType() == Square.EMPTY_CELL)
 				continue;
@@ -64,92 +55,18 @@ public class LegalCheck {
 				return true;
 		}
 		
-		return false;
-	}
-	
-	/**
-	 * Check if there are duplicates in the 3x3 box where
-	 * the square belongs.
-	 * @param boxNum The 3x3 region number in which the
-	 * square belongs to.
-	 * @param val The value for duplicate verification.
-	 * @return True if there is a duplicate in the region.
-	 * False otherwise.
-	 */
-	private static boolean hasDuplicateInBox(int boxNum, int val, Square currentSquare) {
-		LinkedList<Square> list = getSquaresInRegion(boxNum);
-		for (Square s : list) {
-			if (s.getType() == Square.EMPTY_CELL)
-				continue;
-			if (s.getCurrentValue() == val && s != currentSquare)
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Get the list of squares that belong to the
-	 * 3x3 box number given in the parameter.
-	 * @param threeByThreeIndex The 3x3 box number.
-	 * @return The list of squares that are in the given 
-	 * box number.
-	 */
-	private static LinkedList<Square> getSquaresInRegion(int threeByThreeIndex) {
-		LinkedList<Square> threeByList = new LinkedList<Square>();
-		int iStart = 0, iEnd = 0;
-		int jStart = 0, jEnd = 0;
-		if (threeByThreeIndex == 0 ||
-				threeByThreeIndex == 1 ||
-				threeByThreeIndex == 2) {
-			iStart = 0;
-			iEnd = 3;
-			jStart = 0;
-			jEnd = 3;
-			if (threeByThreeIndex == 1) {
-				jStart = 3;
-				jEnd = 6;
-			} else if (threeByThreeIndex == 2) {
-				jStart = 6;
-				jEnd = 6;
-			}
-		} else if (threeByThreeIndex == 3 ||
-				threeByThreeIndex == 4 ||
-				threeByThreeIndex == 5) {
-			iStart = 3;
-			iEnd = 6;
-			jStart = 0;
-			jEnd = 3;
-			if (threeByThreeIndex == 4) {
-				jStart = 3;
-				jEnd = 6;
-			} else if (threeByThreeIndex == 5) {
-				jStart = 6;
-				jEnd = 9;
-			}
-		} else if (threeByThreeIndex == 6 ||
-				threeByThreeIndex == 7 ||
-				threeByThreeIndex == 8) {
-			iStart = 6;
-			iEnd = 9;
-			jStart = 0;
-			jEnd = 3;
-			if (threeByThreeIndex == 7) {
-				jStart = 3;
-				jEnd = 6;
-			} else if (threeByThreeIndex == 8) {
-				jStart = 6;
-				jEnd = 9;
+		// checks duplicated in 3x3 region.
+		for (int i = (row / 3) * 3; i < (row / 3) * 3 + 3; i++) {
+			for (int j = (column / 3) * 3; j < (column / 3) * 3 + 3; j++) {
+				if (puzzle[i][j] != currentSquare && 
+						puzzle[i][j].getType() != Square.EMPTY_CELL && 
+						puzzle[i][j].getCurrentValue() == val)
+					return true;
 			}
 		}
 		
-		for (int i = iStart; i < iEnd; i++) {
-			for (int j = jStart; j < jEnd; j++) {
-				threeByList.add(puzzle[i][j]);
-			}
-		}
-		return threeByList;
+		return false;
 	}
-	
 	
 	private static Square[][] puzzle;
 }
