@@ -41,13 +41,13 @@ public class GameInterface {
 	//static final int subBoxWidth = 50;
 	static final int frameWidth = 600;
 	static final int frameHeight = 600;
-	static final Color PRESET_COLOR = new Color(140, 140, 140);
-	static final Color WRONG_COLOR = new Color(200, 140, 140);
+	static final Color PRESET_COLOR = new Color(223, 223, 223);
+	static final Color WRONG_COLOR = new Color(249, 200, 200);
 	static final Color USER_COLOR = new Color(255, 255, 255);
 	static final Color HINT_COLOR = new Color(230, 230, 230);
 	
 	static final Color PRESET_TEXT_COLOR = new Color(100, 100, 100);
-	static final Color WRONG_TEXT_COLOR = new Color(250, 150, 150);
+	static final Color WRONG_TEXT_COLOR = new Color(255, 0, 0);
 	static final Color USER_TEXT_COLOR = Color.BLACK;
 	static final Color HINT_TEXT_COLOR = new Color(150, 150, 250);
 	
