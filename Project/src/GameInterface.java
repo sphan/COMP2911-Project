@@ -3,17 +3,11 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import java.util.Calendar;
->>>>>>> f37a0b841080ff3f17562d032d46765afe1df749
-=======
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
->>>>>>> c403b9947c0cf0ff4a556318fb976b5b15199f2a
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -228,20 +222,10 @@ public class GameInterface {
 				box[x][y].setBackground(Color.white);
 				if (value != 0){
 					box[x][y].setText(value.toString());
-<<<<<<< HEAD
-<<<<<<< HEAD
 					box[x][y].setBackground(PRESET_COLOR);
 					box[x][y].setForeground(PRESET_TEXT_COLOR);
-=======
-					if (boardLayout[y][x].getType() == Square.PREDEFINE_CELL) {
-//						box[x][y].setEnabled(false);
-						box[x][y].setBackground(Color.lightGray);
-					}
->>>>>>> f37a0b841080ff3f17562d032d46765afe1df749
-=======
 					box[x][y].setBackground(PRESET_COLOR);
 					box[x][y].setForeground(PRESET_TEXT_COLOR);
->>>>>>> c403b9947c0cf0ff4a556318fb976b5b15199f2a
 				}
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
@@ -255,11 +239,9 @@ public class GameInterface {
 		
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * Function to update the display of the board when elements within it have changed
 	 */
-=======
 	private static void loadImages() {
 		imageValue = new BufferedImage[10];
 		imageSelectedValue = new BufferedImage[10];
@@ -311,7 +293,6 @@ public class GameInterface {
 		}
 	}
 	
->>>>>>> scbird01-master
 	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
 	// legal still leaves the number red
 	private static void resetSourceBox(){
@@ -330,9 +311,12 @@ public class GameInterface {
 					currentBox = box[col][row];
 					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
+						
 					} else {
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
+//						if (currentSquare.getType() == Square.ERROR_CELL)
+//							currentSquare.setType(currentSquare.getPreviousType());
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType();
@@ -347,6 +331,9 @@ public class GameInterface {
 					} else if (type == Square.HINT_CELL){
 						currentBox.setBackground(HINT_COLOR);
 						currentBox.setForeground(HINT_TEXT_COLOR);
+					} else if (type == Square.PREDEFINE_CELL) {
+						currentBox.setBackground(PRESET_COLOR);
+						currentBox.setForeground(PRESET_TEXT_COLOR);
 					}
 				} else {
 					Integer x = 0;
