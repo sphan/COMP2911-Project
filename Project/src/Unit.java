@@ -52,6 +52,7 @@ public class Unit {
 	 * @return array list of peers
 	 */
 	public ArrayList<Unit> getPeers(Unit a) {
+		//System.out.println("Original is " + a.getX() + "x " + a.getY() + "y ");
 		ArrayList<Unit> toReturn = new ArrayList<Unit>();
 		//finds the peers along the horizontal
 		for (int i = 0; i < 9; i++) {
@@ -66,12 +67,15 @@ public class Unit {
 			}
 		}
 		//finds the peers in the same box if not in the current list
-		ArrayList<Unit> box = getBox(this);
+		ArrayList<Unit> box = getBox(a);
 		for (Unit u : box) {
 			if (toReturn.contains(u) == false && u.equals(a) == false) {
 				toReturn.add(u);
 			}
 		}
+		//for (Unit u : toReturn) {
+		//	System.out.println("Peer " + u.getX() + "x " + u.getY() + "y");
+		//}
 		return toReturn;
 	}
 	
@@ -82,8 +86,8 @@ public class Unit {
 	 */
 	public ArrayList<Unit> getBox(Unit a) {
 		ArrayList<Unit> toReturn = new ArrayList<Unit>();
-		int first = a.getX()%3;
-		int second = a.getY()%3;
+		int first = a.getX()/3;
+		int second = a.getY()/3;
 		for (int i = first*3; i < first*3 + 3; i++) {
 			for (int j = second*3; j < second*3 + 3; j++) {
 				Unit buffer = new Unit(i, j);

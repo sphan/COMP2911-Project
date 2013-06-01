@@ -57,7 +57,7 @@ public class GameInterface {
 	 */
 	public GameInterface(Square[][] newLayout){
 		
-		try {
+		try { //sets the appearance and behaviour of gui widgets
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -71,10 +71,10 @@ public class GameInterface {
 		
 		boardLayout = newLayout;
 		loadImages();
-		
+		//creates a sudoku frame
 		frame = new JFrame("Sudoku");
-		frame.setSize(frameWidth, frameHeight);
-		pane = frame.getContentPane();
+		frame.setSize(frameWidth, frameHeight); //sets the frame size
+		pane = frame.getContentPane(); //sets a pane within the frame
 		
 		pane.setLayout(null);
 		
@@ -90,36 +90,37 @@ public class GameInterface {
 		pane.add(timerLabel);
 		timerLabel.setBounds(20, frameHeight - 120, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
 		
-		//timer label
+		//timer label with time that will update
 		elapseTimer = new JLabel("00:00");
 		pane.add(elapseTimer);
 		elapseTimer.setBounds(30, frameHeight - 100, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
 		
 		//entry mode toggle button
 		btnInputMode = new JButton("Entry Mode");
+		//entry mode label
 		lblInputLabel = new JLabel("Current Writing Mode Click or hold Shift to change");
 		pane.add(btnInputMode);
-		pane.add(lblInputLabel);	
+		pane.add(lblInputLabel); //adds them to frame, sets positions and adds action listener
 		btnInputMode.setBounds(10, frameHeight - 60, btnInputMode.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		lblInputLabel.setBounds(10, frameHeight - 80, lblInputLabel.getPreferredSize().width, lblInputLabel.getPreferredSize().height);
 		btnInputMode.addActionListener(new btnInputModeListener());
 		
 		//hint button
 		btnHint = new JButton("HINT");
-		pane.add(btnHint);
+		pane.add(btnHint); //adds to pane and sets the position and action listener
 		btnHint.setBounds(360, frameHeight - 60, btnHint.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		btnHint.addActionListener(new btnHintListener());
 		
 		//quit button
 		btnQuit = new JButton("QUIT");
-		pane.add(btnQuit);
+		pane.add(btnQuit); //adds to pane and sets the position and action listener
 		btnQuit.setBounds(200, frameHeight - 60, btnQuit.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		btnQuit.addActionListener(new btnQuitListener());
 
 		//frame.addKeyListener(new keyPressedListener());
 		frame.requestFocus();
-		frame.setVisible(true);
-		updateTimer();
+		frame.setVisible(true); //set frame as visible
+		updateTimer(); //updates the time elapsed
 	}
 		
 	/**
@@ -147,7 +148,7 @@ public class GameInterface {
 				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
 					if (LegalCheck.isNotLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()))
 						return false;
-				}
+				} //checks if each value of the board is legal, if so, has won
 			}
 		} else
 			return false;
@@ -164,7 +165,7 @@ public class GameInterface {
 			for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
 				if (boardLayout[i][j].getCurrentValue() == 0)
 					return false;
-			}
+			} //checks if the board doesn't have empty values
 		}
 		return true;
 	}
@@ -174,15 +175,15 @@ public class GameInterface {
 	 */
 	public void updateTimer() {
 		int hour, minute, sec;
-		while (!hasWon()) {
-			long timeInSeconds = Puzzle.calculateTimeElapse(startTime);
+		while (!hasWon()) { //checks if game is still going
+			long timeInSeconds = Puzzle.calculateTimeElapse(startTime); //finds the time elapsed
 			hour = (int) (timeInSeconds / 3600);
 			timeInSeconds = timeInSeconds - (hour * 3600);
 			minute = (int) (timeInSeconds / 60);
 			timeInSeconds = timeInSeconds - (minute * 60);
-			sec = (int) (timeInSeconds);
+			sec = (int) (timeInSeconds); //calculates hours, minutes based on total seconds
 			elapseTimer.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute)  + 
-					":" + String.format("%02d", sec));
+					":" + String.format("%02d", sec)); //updates the timer
 		}
 	}
 	
@@ -212,19 +213,19 @@ public class GameInterface {
 		int y = 0;
 		Integer value;
 		while (y < 9){
-			while (x < 9){
+			while (x < 9){ //creates a button for each square on the board
 				box[x][y] = new JButton();
 				//subBox[x][y] = new JTextPane();
 				pane.add(box[x][y]);
 				//pane.add(subBox[x][y]);
 				box[x][y].setBounds(x*boxWidth+((Math.round(x/3)+1) * 10) + x*3, y*boxHeight+((Math.round(y/3)+1) * 10) + y*3, boxWidth, boxHeight);
 				box[x][y].setBorder(BorderFactory.createEmptyBorder());
-				
-				
+				//sets the position
+				//adds action listeners
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
 				value = boardLayout[y][x].getCurrentValue();
-				box[x][y].setBackground(Color.white);
+				box[x][y].setBackground(Color.white); //sets the look
 				if (value != 0){
 					box[x][y].setText(value.toString());
 					box[x][y].setBackground(PRESET_COLOR);
@@ -446,6 +447,8 @@ public class GameInterface {
 	 */
 	public static class btnHintListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
+			if (hasWon())
+				return;
 			HintSystem h = new HintSystem();
 			Move newMove = h.Hint(boardLayout);
 			if (newMove != null && newMove.getValue() != 0) {
