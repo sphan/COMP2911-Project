@@ -25,8 +25,8 @@ public class LegalCheck {
 		int column = s.getColumn();
 		boolean duplicated = false;
 
-		if (val != 0) 
-			duplicated = hasDuplicate(row, column, val, s);	
+		if (val != 0) //if has a value
+			duplicated = hasDuplicate(row, column, val, s);	//checks if it has a duplicate
 		return duplicated;
 	}
 	
@@ -58,10 +58,11 @@ public class LegalCheck {
 		// checks duplicated in 3x3 region.
 		for (int i = (row / 3) * 3; i < (row / 3) * 3 + 3; i++) {
 			for (int j = (column / 3) * 3; j < (column / 3) * 3 + 3; j++) {
+				//for all in box
 				if (puzzle[i][j] != currentSquare && 
 						puzzle[i][j].getType() != Square.EMPTY_CELL && 
 						puzzle[i][j].getCurrentValue() == val)
-					return true;
+					return true; //found if not same square, not empty and same value
 			}
 		}
 		
