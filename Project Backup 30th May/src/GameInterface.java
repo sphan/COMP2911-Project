@@ -1,43 +1,21 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import java.util.Calendar;
->>>>>>> f37a0b841080ff3f17562d032d46765afe1df749
-=======
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
->>>>>>> c403b9947c0cf0ff4a556318fb976b5b15199f2a
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-/**
- * A class to display the user interface for the board to allow play
- * @author Sam
- */
+
 public class GameInterface {
 	
 	static JFrame frame;
 	static Container pane;
 	//The boxes themselves
 	static JButton[][] box;
-	static BufferedImage[] imageValue;
-	static BufferedImage[] imageSelectedValue;
-	
 	//The smaller boxes which can be used to store possible numbers
 	static JButton btnInputMode;
 	static JLabel lblInputLabel;
 	static JButton btnQuit;
-	static JButton btnHint;
-	static JLabel elapseTimer;
-	static JLabel timerLabel;
 	//static Square[][] entry;
 	
 	
@@ -57,26 +35,8 @@ public class GameInterface {
 	static final Color USER_TEXT_COLOR = Color.BLACK;
 	static final Color HINT_TEXT_COLOR = new Color(150, 150, 250);
 	
-	/**
-	 * Constructor that creates a new gui of a game board
-	 * @param newLayout
-	 */
 	public GameInterface(Square[][] newLayout){
-		
-		try {
-			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
-		
 		boardLayout = newLayout;
-		loadImages();
 		
 		frame = new JFrame("Sudoku");
 		frame.setSize(frameWidth, frameHeight);
@@ -84,24 +44,13 @@ public class GameInterface {
 		
 		pane.setLayout(null);
 		
-		//sudoku board
 		box = new JButton[9][9];
 		//Get it so that I take this from the puzzle
 		//entry = new Square[9][9];
 		//subBox = new JTextPane[9][9];
 		setStartingBoxInfo();
 		
-		//timer label
-		timerLabel = new JLabel("Elapsed Time");
-		pane.add(timerLabel);
-		timerLabel.setBounds(20, frameHeight - 120, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
 		
-		//timer label
-		elapseTimer = new JLabel("00:00");
-		pane.add(elapseTimer);
-		elapseTimer.setBounds(30, frameHeight - 100, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
-		
-		//entry mode toggle button
 		btnInputMode = new JButton("Entry Mode");
 		lblInputLabel = new JLabel("Current Writing Mode Click or hold Shift to change");
 		pane.add(btnInputMode);
@@ -110,13 +59,6 @@ public class GameInterface {
 		lblInputLabel.setBounds(10, frameHeight - 80, lblInputLabel.getPreferredSize().width, lblInputLabel.getPreferredSize().height);
 		btnInputMode.addActionListener(new btnInputModeListener());
 		
-		//hint button
-		btnHint = new JButton("HINT");
-		pane.add(btnHint);
-		btnHint.setBounds(360, frameHeight - 60, btnHint.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
-		btnHint.addActionListener(new btnHintListener());
-		
-		//quit button
 		btnQuit = new JButton("QUIT");
 		pane.add(btnQuit);
 		btnQuit.setBounds(200, frameHeight - 60, btnQuit.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
@@ -125,7 +67,6 @@ public class GameInterface {
 		//frame.addKeyListener(new keyPressedListener());
 		frame.requestFocus();
 		frame.setVisible(true);
-		updateTimer();
 	}
 		
 	/**
@@ -170,23 +111,6 @@ public class GameInterface {
 		return true;
 	}
 	
-	/**
-	 * Function to update the timer with how much time has elapsed
-	 */
-	public void updateTimer() {
-		int hour, minute, sec;
-		while (!hasWon()) {
-			long timeInSeconds = Puzzle.calculateTimeElapse(startTime);
-			hour = (int) (timeInSeconds / 3600);
-			timeInSeconds = timeInSeconds - (hour * 3600);
-			minute = (int) (timeInSeconds / 60);
-			timeInSeconds = timeInSeconds - (minute * 60);
-			sec = (int) (timeInSeconds);
-			elapseTimer.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute)  + 
-					":" + String.format("%02d", sec));
-		}
-	}
-	
 	//TODO Input to set the setting of the boxes (E.g. red "MISTAKE" color)
 	/**
 	 * De-selects all squares
@@ -218,30 +142,14 @@ public class GameInterface {
 				//subBox[x][y] = new JTextPane();
 				pane.add(box[x][y]);
 				//pane.add(subBox[x][y]);
-				box[x][y].setBounds(x*boxWidth+((Math.round(x/3)+1) * 10) + x*3, y*boxHeight+((Math.round(y/3)+1) * 10) + y*3, boxWidth, boxHeight);
-				box[x][y].setBorder(BorderFactory.createEmptyBorder());
-				
-				
+				box[x][y].setBounds(x*boxWidth+((Math.round(x/3)+1) * 10), y*boxHeight+((Math.round(y/3)+1) * 10), boxWidth, boxHeight);
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
 				value = boardLayout[y][x].getCurrentValue();
-				box[x][y].setBackground(Color.white);
 				if (value != 0){
 					box[x][y].setText(value.toString());
-<<<<<<< HEAD
-<<<<<<< HEAD
 					box[x][y].setBackground(PRESET_COLOR);
 					box[x][y].setForeground(PRESET_TEXT_COLOR);
-=======
-					if (boardLayout[y][x].getType() == Square.PREDEFINE_CELL) {
-//						box[x][y].setEnabled(false);
-						box[x][y].setBackground(Color.lightGray);
-					}
->>>>>>> f37a0b841080ff3f17562d032d46765afe1df749
-=======
-					box[x][y].setBackground(PRESET_COLOR);
-					box[x][y].setForeground(PRESET_TEXT_COLOR);
->>>>>>> c403b9947c0cf0ff4a556318fb976b5b15199f2a
 				}
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
@@ -255,63 +163,6 @@ public class GameInterface {
 		
 	}
 	
-<<<<<<< HEAD
-	/**
-	 * Function to update the display of the board when elements within it have changed
-	 */
-=======
-	private static void loadImages() {
-		imageValue = new BufferedImage[10];
-		imageSelectedValue = new BufferedImage[10];
-		try {
-			System.out.println("Attempt to load images");
-			imageValue[0] = ImageIO.read(new File("ProjectPics/Invisible/blank.png"));
-			System.out.print("*");
-			imageValue[1] = ImageIO.read(new File("ProjectPics/Invisible/1.png"));
-			System.out.print("*");
-			imageValue[2] = ImageIO.read(new File("ProjectPics/Invisible/2.png"));
-			System.out.print("*");
-			imageValue[3] = ImageIO.read(new File("ProjectPics/Invisible/3.png"));
-			System.out.print("*");
-			imageValue[4] = ImageIO.read(new File("ProjectPics/Invisible/4.png"));
-			System.out.print("*");
-			imageValue[5] = ImageIO.read(new File("ProjectPics/Invisible/5.png"));
-			System.out.print("*");
-			imageValue[6] = ImageIO.read(new File("ProjectPics/Invisible/6.png"));
-			System.out.print("*");
-			imageValue[7] = ImageIO.read(new File("ProjectPics/Invisible/7.png"));
-			System.out.print("*");
-			imageValue[8] = ImageIO.read(new File("ProjectPics/Invisible/8.png"));
-			System.out.print("*");
-			imageValue[9] = ImageIO.read(new File("ProjectPics/Invisible/9.png"));
-			System.out.print("*");
-			imageSelectedValue[0] = ImageIO.read(new File("ProjectPics/Selected/Invisible/blank.png"));
-			System.out.print("*");
-			imageSelectedValue[1] = ImageIO.read(new File("ProjectPics/Selected/Invisible/1.png"));
-			System.out.print("*");
-			imageSelectedValue[2] = ImageIO.read(new File("ProjectPics/Selected/Invisible/2.png"));
-			System.out.print("*");
-			imageSelectedValue[3] = ImageIO.read(new File("ProjectPics/Selected/Invisible/3.png"));
-			System.out.print("*");
-			imageSelectedValue[4] = ImageIO.read(new File("ProjectPics/Selected/Invisible/4.png"));
-			System.out.print("*");
-			imageSelectedValue[5] = ImageIO.read(new File("ProjectPics/Selected/Invisible/5.png"));
-			System.out.print("*");
-			imageSelectedValue[6] = ImageIO.read(new File("ProjectPics/Selected/Invisible/6.png"));
-			System.out.print("*");
-			imageSelectedValue[7] = ImageIO.read(new File("ProjectPics/Selected/Invisible/7.png"));
-			System.out.print("*");
-			imageSelectedValue[8] = ImageIO.read(new File("ProjectPics/Selected/Invisible/8.png"));
-			System.out.print("*");
-			imageSelectedValue[9] = ImageIO.read(new File("ProjectPics/Selected/Invisible/9.png"));
-			System.out.print("*");
-		} catch (Exception e) {
-			System.out.println("IMAGE FILES NOT FOUND!");
-			e.printStackTrace();
-		}
-	}
-	
->>>>>>> scbird01-master
 	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
 	// legal still leaves the number red
 	private static void resetSourceBox(){
@@ -331,8 +182,7 @@ public class GameInterface {
 					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
 					} else {
-						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
-							currentSquare.setType(currentSquare.getPreviousType());
+						currentSquare.setType(currentSquare.getPreviousType());
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType();
@@ -405,7 +255,6 @@ public class GameInterface {
 	private static int inputX;
 	private static int inputY;
 	private static Square[][] boardLayout;
-	private static Calendar startTime = Calendar.getInstance();
 	
 	//============================================================================================================================================================
 	//AAAAAAAA  CCCCCCCC  TTTTTTTTTT  IIIIII  OOOOOOOO  NN      NN        LL      IIIIII  SSSSSSSS  TTTTTTTTTT  EEEEEEEE  NN      NN  EEEEEEEE  RRRRRR    SSSSSSSS
@@ -445,26 +294,6 @@ public class GameInterface {
 	public static class btnQuitListener implements ActionListener{
 		public void actionPerformed(ActionEvent e){
 			System.exit(0);
-		}
-	}
-	
-	/**
-	 * Action Listener to provide a hint when a user desires such
-	 */
-	public static class btnHintListener implements ActionListener{
-		public void actionPerformed(ActionEvent e){
-			HintSystem h = new HintSystem();
-			Move newMove = h.Hint(boardLayout);
-			if (newMove != null && newMove.getValue() != 0) {
-				boardLayout[newMove.getY()][newMove.getX()].setCurrentValue(newMove.getValue());
-				System.out.println("board val is " + boardLayout[newMove.getX()][newMove.getY()].getCurrentValue());
-				inputX = newMove.getX();
-				inputY = newMove.getY();
-				source = box[inputX][inputY];
-				Color hintColor = new Color(102, 255, 178);
-				source.setForeground(hintColor);
-				resetSourceBox();
-			}
 		}
 	}
 	
@@ -561,7 +390,11 @@ public class GameInterface {
 				boardLayout[row][column].setCurrentValue(0);
 			}
 			resetSourceBox();
+			
+
+			
 		}
+		
 	}
 		
 	//NOTE: if you're looking for private variables, they're above the Action Listeners
