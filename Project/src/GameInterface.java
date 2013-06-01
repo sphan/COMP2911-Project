@@ -155,7 +155,7 @@ public class GameInterface {
 		if (boardFilled) {
 			for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
-					if (LegalCheck.checkLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()) == false)
+					if (LegalCheck.isNotLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()) == false)
 						return false;
 				}
 			}
@@ -310,12 +310,11 @@ public class GameInterface {
 				if (currentSquare.getCurrentValue() >= 0){
 					currentBox = box[col][row];
 					
-					if (LegalCheck.checkLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
+					if (LegalCheck.isNotLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
 					} else {
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
-						
 					}
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType();
@@ -327,6 +326,7 @@ public class GameInterface {
 						currentBox.setForeground(WRONG_TEXT_COLOR);
 					} else if (type == Square.EMPTY_CELL){
 						currentBox.setBackground(USER_COLOR);
+						currentBox.setForeground(USER_TEXT_COLOR);
 					} else if (type == Square.HINT_CELL){
 						currentBox.setBackground(HINT_COLOR);
 						currentBox.setForeground(HINT_TEXT_COLOR);
