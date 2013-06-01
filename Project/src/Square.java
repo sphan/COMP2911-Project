@@ -18,8 +18,7 @@ public class Square {
 	 * @param boxNum The 3x3 box number in which the square is in.
 	 * @param positionInBox The position in the 3x3 box the square is in.
 	 */
-	public Square(int boxNum, int type) {
-		this.threeByThreeBoxIndex = boxNum;
+	public Square(int type) {
 		this.type = type;
 		this.prevType = EMPTY_CELL;
 		this.availableValues = new LinkedList<Integer>();
@@ -63,16 +62,6 @@ public class Square {
 		this.draftEntry[value] = !this.draftEntry[value];
 	}
 	
-	/**
-	 * Set the 3x3 box in which the current square is in.
-	 * Index from 0 to 8.
-	 * @param threeByThreeBoxIndex The 3x3 box number that
-	 * the square is in range from 0 to 8.
-	 */
-	public void setThreeByThreeBox(int threeByThreeBoxIndex) {
-		this.threeByThreeBoxIndex = threeByThreeBoxIndex;
-	}
-
 	/**
 	 * Set the type of a square. The types can be Empty,
 	 * or User-input, or hint, or predefined or error. This
@@ -120,14 +109,6 @@ public class Square {
 	 */
 	public boolean isMarkedDraft(int value){
 		return this.draftEntry[value];
-	}
-	
-	/**
-	 * Get the 3x3 region in which the square belongs to.
-	 * @return The index of the 3x3 region.
-	 */
-	public int getThreeByThreeBox() {
-		return threeByThreeBoxIndex;
 	}
 	
 	/**
@@ -180,7 +161,6 @@ public class Square {
 	
 	private int row;
 	private int column;
-	private int threeByThreeBoxIndex;
 	private boolean[] draftEntry = {false, false, false, false, false, false, false, false, false};
 
 	//0 for empty
