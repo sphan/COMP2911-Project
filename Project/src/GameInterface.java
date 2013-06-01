@@ -140,27 +140,32 @@ public class GameInterface {
 	 * are valid. False otherwise.
 	 */
 	public static boolean hasWon() {
-		boolean boardFilled = false;
-		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
-			for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
-				if (boardLayout[i][j].getCurrentValue() != 0) {
-					boardFilled = true;
-				} else {
-					boardFilled = false;
-					break;
-				}
-			}
-		}
+		boolean boardFilled = checkBoardFilled();
 		
 		if (boardFilled) {
 			for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
 				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
-					if (LegalCheck.isNotLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()) == false)
+					if (LegalCheck.isNotLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()))
 						return false;
 				}
 			}
 		} else
 			return false;
+		return true;
+	}
+	
+	/**
+	 * Checks if the board is completely filled out.
+	 * @return True if the board is completely filled out.
+	 * False otherwise.
+	 */
+	private static boolean checkBoardFilled() {
+		for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
+			for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
+				if (boardLayout[i][j].getCurrentValue() == 0)
+					return false;
+			}
+		}
 		return true;
 	}
 	
