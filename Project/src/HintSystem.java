@@ -3,8 +3,12 @@ import java.util.ArrayList;
 /**
  * A class to return a hint given a board state
  * @author Richard Li
- * Using code from www.colloquial.com/games/sudoku/java_sudoku/html
- * which was written by Bob Carpenter as well as original code
+ * Using a backup backtracking DFS from
+ * from www.colloquial.com/games/sudoku/java_sudoku/html
+ * which was written by Bob Carpenter 
+ * not used in all instances of game
+ * specific to this current board generation
+ * only used sometimes when less than 17 numbers are given
  */
 public class HintSystem {
 	private String[][] toSolve;
@@ -30,62 +34,10 @@ public class HintSystem {
 	 * @return a move with hint if found, else null
 	 */
 	public Move Hint (Square[][] Sudoku) {
-		/*
-		int[][] Sudoku1 = new int[9][9]; 
-		
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++) {
-				Sudoku1[i][j] = 0;
-			}
-		}
-		
-		Sudoku1[0][0] = 5;
-		Sudoku1[0][1] = 3;
-		Sudoku1[1][0] = 6;
-		Sudoku1[2][1] = 9;
-		Sudoku1[2][2] = 8;
-		Sudoku1[0][4] = 7;
-		Sudoku1[1][3] = 1;
-		Sudoku1[1][4] = 9;
-		Sudoku1[1][5] = 5;
-		Sudoku1[2][7] = 6;
-		Sudoku1[3][0] = 8;
-		Sudoku1[4][0] = 4;
-		Sudoku1[5][0] = 7;
-		Sudoku1[4][3] = 8;
-		Sudoku1[3][4] = 6;
-		Sudoku1[4][5] = 3;
-		Sudoku1[5][4] = 2;
-		Sudoku1[3][8] = 3;
-		Sudoku1[4][8] = 1;
-		Sudoku1[5][8] = 6;
-		Sudoku1[6][1] = 6;
-		Sudoku1[7][3] = 4;
-		Sudoku1[7][4] = 1;
-		Sudoku1[7][5] = 9;
-		Sudoku1[8][4] = 8;
-		Sudoku1[6][6] = 2;
-		Sudoku1[6][7] = 8;
-		Sudoku1[7][8] = 5;
-		Sudoku1[8][8] = 9;
-		Sudoku1[8][7] = 7;
-		
-		//Sudoku1[0][2] = 4;
-		//Re-enable this to find an obvious solution
-		*/
-		//test Sudoku
-		
-		//Addressed as Sudoku1[y][x]
-		
-		//disable below to test with actual input
-		//Sudoku = Sudoku1;
-		
 		//prints original sudoku
 		print(Sudoku);
-		
 		//a boolean to check if board is filled
 		Boolean check = false;
-		
 		//sets up grid to eliminate possibilities
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -96,11 +48,9 @@ public class HintSystem {
 				}
 			}
 		}
-		
 		//checks if board is filled
 		if (check == false) 
 			return null;
-		
 		//deep copy toSolve
 		String[][] toCheck = new String[9][9];
 		for (int i = 0; i < 9; i++) {
@@ -108,20 +58,13 @@ public class HintSystem {
 				toCheck[i][j] = toSolve[i][j];
 			}
 		}
-		
-		
-		
 		//looks for obvious solution
 		if (search(toCheck) == true) {
 			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
 			return move;
 		}
-		
-		
-		
 		System.out.println("Couldn't find an obvious solution, proceeding to do backtracking dfs:");
 		System.out.println("");
-		
 		int[][] toSearch = new int[9][9];
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -130,8 +73,6 @@ public class HintSystem {
 				}
 			}
 		}
-		
-		
 		//backtracking dfs
 		if (solve(0, toSearch)) {
 			//if can find a solution, return hint from first branch state used
@@ -139,12 +80,9 @@ public class HintSystem {
 			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
 			return move;
 		}
-		System.out.println("Darn");
-		
 		//if can't find obvious hint or possible solution, returns null
 		return null;
 	}
-	
 	
 	/**
 	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
@@ -191,6 +129,7 @@ public class HintSystem {
 				//keeps on trying to solve
 				//if leads to fail, return try next, if no more, return false
 				if (solve(nextPosition(p),cells)) {
+					//sets the move to return
 					move.setX(j);
 					move.setY(i);
 					move.setValue(val);
@@ -242,28 +181,24 @@ public class HintSystem {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				if (solve[i][j].length() == 1) {
-					//for debugging
-					//System.out.println("curr is " + i + "y " + j + "x " + "value = " + solve[i][j]);
+					//gets all the values so far
 					int value = Integer.parseInt(solve[i][j]);
+					//gets the peers
 					Unit curr = new Unit(j, i);
 					ArrayList<Unit> list = curr.getPeers(curr);
-					for (Unit u : list) {
-						//print statements are for debugging
-						//System.out.println("check solve " + i + "y " + j + "x " + "value = " + value);
-						//System.out.println("old solve " + u.getX() + "x " + u.getY() + "y " + solve[u.getY()][u.getX()]);
+					for (Unit u : list) { //eliminates the values on all of the unit's peers
 						solve[u.getY()][u.getX()] = solve[u.getY()][u.getX()].replace(Integer.toString(value), "");
-						//System.out.println("new solve " + u.getX() + "x " + u.getY() + "y " + solve[u.getY()][u.getX()]);
 					}
 				}
 			}
 		}
-		if (checkPossibilities(solve))
+		if (checkPossibilities(solve)) //checks if there is any hint to return
 			return true;
 		return false;
     }
 	
     /**
-     * Checks if there are any hints possible from eliminating possiblities
+     * Checks if there are any hints possible from eliminating possibilities
      * @param toCheck the board
      * @return true or yes, else false
      */
@@ -271,11 +206,10 @@ public class HintSystem {
 		//Rule 1: if square with 1 possibility, found hint to give
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				//this printf is for debugging
-				//System.out.println(j + "x " + i + "y toSolve " + toSolve[i][j] + " toCheck " + toCheck[i][j]);
 				if (toCheck[i][j].length() == 1 && 
 						Integer.parseInt(toSolve[i][j]) != 
 						Integer.parseInt(toCheck[i][j])) {
+					//for all on board if just 1 value and it is not a given, return that as hint
 					move.setX(j);
 					move.setY(i);
 					move.setValue(Integer.parseInt(toCheck[i][j]));
@@ -295,8 +229,11 @@ public class HintSystem {
 						buffer[((int)toCheck[u.getY()][u.getX()].charAt(k) - 49)]++;
 					}
 				}
+				//for each box of 9 squares on the board, create an array with the number
+				//of times a possible value occurs
 				for (int k = 0; k < 9; k++) {
 					if (buffer[k] == 1) {
+						//if value only occurs once in the box, return that as the hint
 						for (Unit u : units) {
 							if (toCheck[u.getY()][u.getX()].contains(Integer.toString(k + 1))) {
 								move.setX(u.getX());
@@ -319,11 +256,12 @@ public class HintSystem {
 	 * @return array
 	 */
 	private int[] clearBuffer(int[] buffer, int length) {
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length; i++) { //for all in the array, set to 0
 			buffer[i] = 0;
 		}
 		return buffer;
 	}
+	
 	/**
 	 * Prints the board given
 	 * @param solved the board
@@ -331,6 +269,7 @@ public class HintSystem {
 	private void print(Square[][] solved) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
+				//for all squares on the board, print it
 				System.out.print(solved[i][j].getCurrentValue() + " ");
 				if (j == 2 || j == 5) {
 					System.out.print(" ");
@@ -352,6 +291,7 @@ public class HintSystem {
 	private void printSolved(int[][] solved) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
+				//for all squares on the board, print it
 				System.out.print(solved[i][j] + " ");
 				if (j == 2 || j == 5) {
 					System.out.print(" ");
