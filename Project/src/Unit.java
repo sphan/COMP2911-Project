@@ -52,7 +52,6 @@ public class Unit {
 	 * @return array list of peers
 	 */
 	public ArrayList<Unit> getPeers(Unit a) {
-		//System.out.println("Original is " + a.getX() + "x " + a.getY() + "y ");
 		ArrayList<Unit> toReturn = new ArrayList<Unit>();
 		//finds the peers along the horizontal
 		for (int i = 0; i < 9; i++) {
@@ -73,9 +72,6 @@ public class Unit {
 				toReturn.add(u);
 			}
 		}
-		//for (Unit u : toReturn) {
-		//	System.out.println("Peer " + u.getX() + "x " + u.getY() + "y");
-		//}
 		return toReturn;
 	}
 	
