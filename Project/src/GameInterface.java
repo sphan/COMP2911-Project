@@ -6,43 +6,73 @@ import java.awt.event.*;
 import java.util.Calendar;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> c403b9947c0cf0ff4a556318fb976b5b15199f2a
+>>>>>>> scbird01-master
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+<<<<<<< HEAD
 /**
  * A class to display the user interface for the board to allow play
  * @author Sam
  */
+=======
+=======
+>>>>>>> a36a433a6e065fc870e4b73b1af5bab29cf0a207
+
+>>>>>>> scbird01-master
 public class GameInterface {
 	
 	static JFrame frame;
+	static Container overall;
 	static Container pane;
-	//The boxes themselves
+	static Container menu;
+	static Container centralMenu;
+	//The boxes themselves and images that go with them
 	static JButton[][] box;
 	static BufferedImage[] imageValue;
 	static BufferedImage[] imageSelectedValue;
+	static ImageIcon[] iconValue;
+	static ImageIcon[] iconSelectedValue;
 	
-	//The smaller boxes which can be used to store possible numbers
-	static JButton btnInputMode;
-	static JLabel lblInputLabel;
-	static JButton btnQuit;
+	//texture for the background
+	static BufferedImage backgroundTexture;
+	static Graphics2D backgroundTextureGraphic;
+	
+	static JButton btnMenu;
 	static JButton btnHint;
 	static JLabel elapseTimer;
 	static JLabel timerLabel;
-	//static Square[][] entry;
 	
+	static JButton[] btnNewGame;
+	static JButton btnMenuQuit;
 	
 	static final int boxWidth = 50;
 	static final int boxHeight = 50;
 	//static final int subBoxHeight = 20;
 	//static final int subBoxWidth = 50;
+<<<<<<< HEAD
 	static final int frameWidth = 600;
 	static final int frameHeight = 600;
 	static final Color PRESET_COLOR = new Color(223, 223, 223);
 	static final Color WRONG_COLOR = new Color(249, 200, 200);
+=======
+	static final int frameWidth = 520;
+	static final int frameHeight = 580;
+	
+	
+	static final boolean MENU = true;
+	static final boolean GAME = false;
+	static boolean viewMode = MENU;
+	
+	static final Color PRESET_COLOR = new Color(140, 140, 140);
+	static final Color WRONG_COLOR = new Color(200, 140, 140);
+>>>>>>> scbird01-master
 	static final Color USER_COLOR = new Color(255, 255, 255);
 	static final Color HINT_COLOR = new Color(230, 230, 230);
 	
@@ -51,11 +81,19 @@ public class GameInterface {
 	static final Color USER_TEXT_COLOR = Color.BLACK;
 	static final Color HINT_TEXT_COLOR = new Color(150, 150, 250);
 	
+<<<<<<< HEAD
 	/**
 	 * Constructor that creates a new gui of a game board
 	 * @param newLayout
 	 */
 	public GameInterface(Square[][] newLayout){
+=======
+	static final String SUDOKU_DESCRIPTION_1 = "<html><b>THE SUDOKU</b> is a number puzzle invented by American Architect Howard Garns around 1979.</html>";
+	static final String SUDOKU_DESCRIPTION_2 = "<html>In Sudoku a player must put the numbers 1-9 in a grid so that all squares are filled and there is " +
+			"no repeated number in any row, column or any one of the 9 3x3 squares</html>";
+	
+	public GameInterface(){
+>>>>>>> scbird01-master
 		
 		try { //sets the appearance and behaviour of gui widgets
 			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -69,13 +107,63 @@ public class GameInterface {
 			e.printStackTrace();
 		}
 		
-		boardLayout = newLayout;
 		loadImages();
 		//creates a sudoku frame
 		frame = new JFrame("Sudoku");
+<<<<<<< HEAD
 		frame.setSize(frameWidth, frameHeight); //sets the frame size
 		pane = frame.getContentPane(); //sets a pane within the frame
+=======
+		frame.setSize(frameWidth, frameHeight);
+		frame.setBackground(Color.WHITE);
+		overall = frame.getContentPane();
+		overall.setBackground(Color.WHITE);
 		
+		
+		pane = new Container();
+		menu = new Container();
+		
+		centralMenu = new Container();
+		overall.add(pane);
+		overall.add(menu);
+		menu.add(centralMenu);
+		
+		menu.setSize(frame.getSize());
+		menu.setLocation(0, 0);
+		menu.setLayout(null);
+		
+		centralMenu.setBounds(10, 10, 500, 500);
+		centralMenu.setLayout(new GridLayout(3, 3));
+>>>>>>> scbird01-master
+		
+		btnNewGame = new JButton[3];
+		btnNewGame[0] = new JButton("Easy");
+		btnNewGame[1] = new JButton("Medium");
+		btnNewGame[2] = new JButton("Hard");
+		
+		btnMenuQuit = new JButton("Quit");
+				
+		centralMenu.add(new JLabel("SUDOKU"));
+		centralMenu.add(new JLabel());
+		centralMenu.add(new JLabel(SUDOKU_DESCRIPTION_1));
+		centralMenu.add(new JLabel(SUDOKU_DESCRIPTION_2));
+		centralMenu.add(new JLabel());
+		centralMenu.add(btnMenuQuit);
+		centralMenu.add(btnNewGame[0]);
+		centralMenu.add(btnNewGame[1]);
+		centralMenu.add(btnNewGame[2]);
+		
+		//btnNewGame.setBounds(100, 500, btnNewGame.getPreferredSize().width, btnNewGame.getPreferredSize().height);
+		//btnMenuQuit.setBounds(300, 500, btnMenuQuit.getPreferredSize().width, btnMenuQuit.getPreferredSize().height);
+		
+		btnMenuQuit.addActionListener(new btnQuitListener());		
+		btnNewGame[0].addActionListener(new btnNewGameListener(0));		
+		btnNewGame[1].addActionListener(new btnNewGameListener(1));		
+		btnNewGame[2].addActionListener(new btnNewGameListener(2));
+		
+		menu.setVisible(true);
+		
+		pane.setSize(frame.getSize());
 		pane.setLayout(null);
 		
 		//sudoku board
@@ -88,11 +176,12 @@ public class GameInterface {
 		//timer label
 		timerLabel = new JLabel("Elapsed Time");
 		pane.add(timerLabel);
-		timerLabel.setBounds(20, frameHeight - 120, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
+		timerLabel.setBounds(10, frameHeight - 55, timerLabel.getPreferredSize().width, timerLabel.getPreferredSize().height);
 		
 		//timer label with time that will update
 		elapseTimer = new JLabel("00:00");
 		pane.add(elapseTimer);
+<<<<<<< HEAD
 		elapseTimer.setBounds(30, frameHeight - 100, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
 		
 		//entry mode toggle button
@@ -116,12 +205,28 @@ public class GameInterface {
 		pane.add(btnQuit); //adds to pane and sets the position and action listener
 		btnQuit.setBounds(200, frameHeight - 60, btnQuit.getPreferredSize().width + 50, btnInputMode.getPreferredSize().height);
 		btnQuit.addActionListener(new btnQuitListener());
+=======
+		elapseTimer.setBounds(115, frameHeight - 55, elapseTimer.getPreferredSize().width + 100, elapseTimer.getPreferredSize().height);
+				
+		btnHint = new JButton("HINT");
+		pane.add(btnHint);
+		btnHint.setBounds(350, frameHeight - 60, 155, btnHint.getPreferredSize().height);
+		btnHint.addActionListener(new btnHintListener());
+		
+		btnMenu = new JButton("MENU");
+		pane.add(btnMenu);
+		btnMenu.setBounds(180, frameHeight - 60, 155, btnHint.getPreferredSize().height);
+		btnMenu.addActionListener(new btnMenuListener());
+>>>>>>> scbird01-master
 
 		//frame.addKeyListener(new keyPressedListener());
+		
+		pane.setVisible(false);
 		frame.requestFocus();
 		frame.setVisible(true); //set frame as visible
 		updateTimer(); //updates the time elapsed
 	}
+<<<<<<< HEAD
 		
 	/**
 	 * Returns the integer of the given square or -1 if the square is empty
@@ -205,13 +310,15 @@ public class GameInterface {
 		return (source != null);
 	}
 
+=======
+			
+>>>>>>> scbird01-master
 	/**
 	 * Sets all the starting boxes including their positions and initially set values
 	 */
 	private static void setStartingBoxInfo(){
 		int x = 0;
 		int y = 0;
-		Integer value;
 		while (y < 9){
 			while (x < 9){ //creates a button for each square on the board
 				box[x][y] = new JButton();
@@ -220,10 +327,15 @@ public class GameInterface {
 				//pane.add(subBox[x][y]);
 				box[x][y].setBounds(x*boxWidth+((Math.round(x/3)+1) * 10) + x*3, y*boxHeight+((Math.round(y/3)+1) * 10) + y*3, boxWidth, boxHeight);
 				box[x][y].setBorder(BorderFactory.createEmptyBorder());
+<<<<<<< HEAD
 				//sets the position
 				//adds action listeners
+=======
+				
+>>>>>>> scbird01-master
 				box[x][y].addActionListener(new btnSquareListener(x, y));
 				box[x][y].addKeyListener(new keyPressedListener(y, x));
+<<<<<<< HEAD
 				value = boardLayout[y][x].getCurrentValue();
 				box[x][y].setBackground(Color.white); 
 				//sets the look
@@ -234,6 +346,8 @@ public class GameInterface {
 					box[x][y].setBackground(PRESET_COLOR);
 					box[x][y].setForeground(PRESET_TEXT_COLOR);
 				}
+=======
+>>>>>>> a36a433a6e065fc870e4b73b1af5bab29cf0a207
 				//box[x][y].setForeground(defaultBGColor);
 				//subBox[x][y].setBounds(x*boxWidth+10, y*boxHeight+10, boxWidth, boxHeight);
 				//subBox[x][y].setEnabled(false);
@@ -252,59 +366,113 @@ public class GameInterface {
 	private static void loadImages() {
 		imageValue = new BufferedImage[10];
 		imageSelectedValue = new BufferedImage[10];
+<<<<<<< HEAD
 		try { //tries to load image files for each square type
+=======
+		iconValue = new ImageIcon[10];
+		iconSelectedValue = new ImageIcon[10];
+		try {
+>>>>>>> scbird01-master
 			System.out.println("Attempt to load images");
-			imageValue[0] = ImageIO.read(new File("ProjectPics/Invisible/blank.png"));
+			imageValue[0] = ImageIO.read(new File("src/ProjectPics/Invisible/blank.png"));
 			System.out.print("*");
-			imageValue[1] = ImageIO.read(new File("ProjectPics/Invisible/1.png"));
+			imageValue[1] = ImageIO.read(new File("src/ProjectPics/Invisible/1.png"));
 			System.out.print("*");
-			imageValue[2] = ImageIO.read(new File("ProjectPics/Invisible/2.png"));
+			imageValue[2] = ImageIO.read(new File("src/ProjectPics/Invisible/2.png"));
 			System.out.print("*");
-			imageValue[3] = ImageIO.read(new File("ProjectPics/Invisible/3.png"));
+			imageValue[3] = ImageIO.read(new File("src/ProjectPics/Invisible/3.png"));
 			System.out.print("*");
-			imageValue[4] = ImageIO.read(new File("ProjectPics/Invisible/4.png"));
+			imageValue[4] = ImageIO.read(new File("src/ProjectPics/Invisible/4.png"));
 			System.out.print("*");
-			imageValue[5] = ImageIO.read(new File("ProjectPics/Invisible/5.png"));
+			imageValue[5] = ImageIO.read(new File("src/ProjectPics/Invisible/5.png"));
 			System.out.print("*");
-			imageValue[6] = ImageIO.read(new File("ProjectPics/Invisible/6.png"));
+			imageValue[6] = ImageIO.read(new File("src/ProjectPics/Invisible/6.png"));
 			System.out.print("*");
-			imageValue[7] = ImageIO.read(new File("ProjectPics/Invisible/7.png"));
+			imageValue[7] = ImageIO.read(new File("src/ProjectPics/Invisible/7.png"));
 			System.out.print("*");
-			imageValue[8] = ImageIO.read(new File("ProjectPics/Invisible/8.png"));
+			imageValue[8] = ImageIO.read(new File("src/ProjectPics/Invisible/8.png"));
 			System.out.print("*");
-			imageValue[9] = ImageIO.read(new File("ProjectPics/Invisible/9.png"));
+			imageValue[9] = ImageIO.read(new File("src/ProjectPics/Invisible/9.png"));
 			System.out.print("*");
-			imageSelectedValue[0] = ImageIO.read(new File("ProjectPics/Selected/Invisible/blank.png"));
+			imageSelectedValue[0] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/blank.png"));
 			System.out.print("*");
-			imageSelectedValue[1] = ImageIO.read(new File("ProjectPics/Selected/Invisible/1.png"));
+			imageSelectedValue[1] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/1.png"));
 			System.out.print("*");
-			imageSelectedValue[2] = ImageIO.read(new File("ProjectPics/Selected/Invisible/2.png"));
+			imageSelectedValue[2] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/2.png"));
 			System.out.print("*");
-			imageSelectedValue[3] = ImageIO.read(new File("ProjectPics/Selected/Invisible/3.png"));
+			imageSelectedValue[3] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/3.png"));
 			System.out.print("*");
-			imageSelectedValue[4] = ImageIO.read(new File("ProjectPics/Selected/Invisible/4.png"));
+			imageSelectedValue[4] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/4.png"));
 			System.out.print("*");
-			imageSelectedValue[5] = ImageIO.read(new File("ProjectPics/Selected/Invisible/5.png"));
+			imageSelectedValue[5] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/5.png"));
 			System.out.print("*");
-			imageSelectedValue[6] = ImageIO.read(new File("ProjectPics/Selected/Invisible/6.png"));
+			imageSelectedValue[6] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/6.png"));
 			System.out.print("*");
-			imageSelectedValue[7] = ImageIO.read(new File("ProjectPics/Selected/Invisible/7.png"));
+			imageSelectedValue[7] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/7.png"));
 			System.out.print("*");
-			imageSelectedValue[8] = ImageIO.read(new File("ProjectPics/Selected/Invisible/8.png"));
+			imageSelectedValue[8] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/8.png"));
 			System.out.print("*");
-			imageSelectedValue[9] = ImageIO.read(new File("ProjectPics/Selected/Invisible/9.png"));
-			System.out.print("*");
+			imageSelectedValue[9] = ImageIO.read(new File("src/ProjectPics/Selected/Invisible/9.png"));
+			System.out.println("*");
+			for (int i = 0; i < 10; i++){
+				iconValue[i] = new ImageIcon(imageValue[i]);
+				iconSelectedValue[i] = new ImageIcon(imageSelectedValue[i]);
+			}
+			
+			backgroundTexture = ImageIO.read(new File("srx/ProjectPics/texture.jpg"));
+			backgroundTextureGraphic = backgroundTexture.createGraphics();
+			
 		} catch (Exception e) {
 			System.out.println("IMAGE FILES NOT FOUND!");
 			e.printStackTrace();
 		}
 	}
 	
+<<<<<<< HEAD
 	//TODO make this reset all boxes since changing a box to make a number in another box that is illegal but should be
 	// legal still leaves the number red
 	/**
 	 * Updates the gui display of the board when the board has changed
 	 */
+=======
+	/**
+	 * Creates a newGame and sets the board layout.
+	 */
+	private static void newGame(int difficulty){
+		boardLayout = Puzzle.createPuzzle(difficulty);
+		int x, y;
+		Integer value;
+		for (x = 0; x < 9; x++){
+			for (y = 0; y < 9; y++){
+				value = boardLayout[y][x].getCurrentValue();
+				box[x][y].setBackground(Color.white);
+				box[x][y].setIcon(getSquareIcon(value, false));
+				if (value != 0){
+					box[x][y].setBackground(PRESET_COLOR);
+					box[x][y].setForeground(PRESET_TEXT_COLOR);
+				} else {
+					box[x][y].setText("");
+				}
+
+			}
+		}
+		
+		startTime = Calendar.getInstance();
+	}
+	
+	/**
+	 * Switches between the game board and the main menu when called
+	 */
+	private static void switchView(){
+		viewMode = !viewMode;
+		
+		menu.setVisible(!menu.isVisible());
+		pane.setVisible(!pane.isVisible());
+		
+		startTime = Calendar.getInstance();
+	}
+	
+>>>>>>> scbird01-master
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
 		int row = 0;
@@ -327,8 +495,13 @@ public class GameInterface {
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
 					}
+<<<<<<< HEAD
 					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType(); //sets the look for various square types
+=======
+					currentBox.setIcon(getSquareIcon(currentSquare.getCurrentValue(), currentBox.hasFocus()));
+					type = currentSquare.getType();
+>>>>>>> scbird01-master
 					if (type == Square.USER_INPUT_CELL){
 						currentBox.setBackground(USER_COLOR);
 						currentBox.setForeground(USER_TEXT_COLOR);
@@ -401,7 +574,80 @@ public class GameInterface {
 
 	}
 		
-	private static boolean draftEntry = false;
+	/**
+	 * Checks if the player has won the game. This checks
+	 * if the boards if completely filled first, then for each filled
+	 * squares, checks if there are duplicates in the regions.
+	 * @return True if the board is completely filled and all values
+	 * are valid. False otherwise.
+	 */
+	public static boolean hasWon() {
+		if (viewMode == GAME){
+			boolean boardFilled = false;
+			for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
+				for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
+					if (boardLayout[i][j].getCurrentValue() != 0) {
+						boardFilled = true;
+					} else {
+						boardFilled = false;
+						break;
+					}
+				}
+			}
+			
+			if (boardFilled) {
+				for (int i = 0; i < Puzzle.ROW_NUMBER; i++) {
+					for (int j = 0; j < Puzzle.COLUMN_NUMBER; j++) {
+						if (!LegalCheck.checkLegal(boardLayout, boardLayout[i][0], boardLayout[i][0].getCurrentValue()))
+							return false;
+					}
+				}
+			} else
+				return false;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static void updateTimer() {
+		int hour, minute, sec;
+		while (!hasWon() && viewMode == GAME) {
+			long timeInSeconds = Puzzle.calculateTimeElapse(startTime);
+			hour = (int) (timeInSeconds / 3600);
+			timeInSeconds = timeInSeconds - (hour * 3600);
+			minute = (int) (timeInSeconds / 60);
+			timeInSeconds = timeInSeconds - (minute * 60);
+			sec = (int) (timeInSeconds);
+			elapseTimer.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute)  + 
+					":" + String.format("%02d", sec));
+		}
+	}
+	
+	/**
+	 * De-selects all squares
+	 */
+	private static void deselectAll(){
+		inputX = -1;
+		inputY = -1;
+		source = null;
+		
+		int x, y;
+		for (x = 0; x < 9; x++){
+			for (y = 0; y < 9; y++){
+				box[x][y].setIcon(getSquareIcon(boardLayout[y][x].getCurrentValue(), false));
+			}
+		}
+	}
+	
+	private static ImageIcon getSquareIcon(int number, boolean selected){
+		if (selected){
+			return iconSelectedValue[number];
+		} else {
+			return iconValue[number];
+		}
+	}
+		
 	private static JButton source;
 	private static int inputX;
 	private static int inputY;
@@ -417,6 +663,7 @@ public class GameInterface {
 	//AA    AA  CCCCCCCC      TT      IIIIII  OOOOOOOO  NN      NN        LLLLLL  IIIIII  SSSSSSSS      TT      EEEEEEEE  NN      NN  EEEEEEEE  RR    RR  SSSSSSSS
 	//============================================================================================================================================================
 	
+<<<<<<< HEAD
 	/**
 	 * Action Listener to change the input mode
 	 * @author Sam
@@ -440,6 +687,8 @@ public class GameInterface {
 		}
 		
 	}
+=======
+>>>>>>> scbird01-master
 	
 	/**
 	 * Action Listener to quit
@@ -506,17 +755,56 @@ public class GameInterface {
 		 */
 		public void actionPerformed(ActionEvent e){
 			//source.setForeground(defaultBGColor);
+<<<<<<< HEAD
+=======
+			deselectAll();
+>>>>>>> scbird01-master
 			System.out.println("square selected " + squareX + " " + squareY);
 			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
 			source = (JButton) e.getSource(); //sets the square selection as the source
 			inputX = squareX;
 			inputY = squareY;
+<<<<<<< HEAD
 //			source.setBackground(Color.green);
+=======
+			source.setIcon(getSquareIcon(boardLayout[inputY][inputX].getCurrentValue(), true));
+>>>>>>> scbird01-master
 			//source.setText(inputX + " " + inputY);
 			//source.setForeground(selectedBGColor);
 		}
 	}
 	
+	/**
+	 * Action Listener for checking when someone presses the New Game buttons
+	 * it then changes the screens and loads a new board.
+	 * @author Sam
+	 *
+	 */
+	public static class btnNewGameListener implements ActionListener{
+		int difficulty;
+		
+		public btnNewGameListener(int diff){
+			difficulty = diff;
+		}
+		
+		public void actionPerformed(ActionEvent e){
+			newGame(difficulty);
+			switchView();
+		}
+	}
+	
+	/**
+	 * Action Listener for when someone presses the menu button in the main board
+	 * @author Sam
+	 *
+	 */
+	public static class btnMenuListener implements ActionListener{
+
+		public void actionPerformed(ActionEvent e) {
+			switchView();
+		}
+	}
+		
 	/**
 	 * Key Press listeners for typing
 	 * @author Sam
