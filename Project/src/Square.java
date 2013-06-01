@@ -40,6 +40,7 @@ public class Square {
 		this.availableValues.clear();
 		for (int i = 1; i <= 9; i++) {
 			availableValues.add(i);
+			//sets available values from 1 to 9
 		}
 	}
 	

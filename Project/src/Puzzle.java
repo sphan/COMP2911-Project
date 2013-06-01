@@ -60,7 +60,7 @@ public class Puzzle {
 					continue;
 				}
 				
-				try {
+				try { //checks if there is a conflict
 					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
 					while (LegalCheck.isNotLegal(puzzle, puzzle[i][j], puzzle[i][j].getAvailableValues().get(k))) {
 						duplicateFound++;
@@ -82,7 +82,7 @@ public class Puzzle {
 						}
 							
 						k = rand.nextInt(puzzle[i][j].getAvailableValues().size());					
-					}
+					} //if no duplicate, no conflict
 					if (duplicateFound == 0) {
 						conflict = false;
 					}
@@ -91,7 +91,7 @@ public class Puzzle {
 					System.out.println("Size was: "+ puzzle[i][j].getAvailableValues().size());
 				}
 				
-				
+				//if no conflict, set squares with values
 				if (!conflict) {
 					puzzle[i][j].setCurrentValue(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
@@ -113,7 +113,7 @@ public class Puzzle {
 	 * and 3x3 box a square should be in.
 	 */
 	private static void initialisePuzzle() {
-		// iterate through the grids/squares.
+		// iterate through the grids/squares and initializes them
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
 				puzzle[i][j] = new Square(Square.EMPTY_CELL);
@@ -123,6 +123,9 @@ public class Puzzle {
 		}
 	}
 	
+	/**
+	 * Function to print out the sudoku
+	 */
 	public static void printPuzzle() {
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
@@ -143,7 +146,7 @@ public class Puzzle {
 	private static void removeCells() {
 		Random rand = new Random();
 		int removeNum = 0;
-		int min = 0, max = 0;
+		int min = 0, max = 0; //sets range to remove
 		if (difficultyLevel == EASY) {
 			max = 37;
 			min = 32;
@@ -155,9 +158,9 @@ public class Puzzle {
 			max = 49;
 			min = 44; 
 		}
-		
+		//finds specific amount to remove
 		removeNum = min + (int)(Math.random() * ((max - min) + 1));
-		
+		//removes those numbers
 		for (int i = 0; i < removeNum; i++) {
 			int j = rand.nextInt(ROW_NUMBER);
 			int k = rand.nextInt(COLUMN_NUMBER);
@@ -197,10 +200,13 @@ public class Puzzle {
 //		}
 //	}
 	
+	/**
+	 * Function to update the board based on the type of a square
+	 */
 	private static void updatePossibleValues() {
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
-				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
+				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {//if empty cell, clear it
 					puzzle[i][j].getAvailableValues().clear();
 					for (int k = 1; k <= 9; k++) {
 						if (LegalCheck.isNotLegal(puzzle, puzzle[i][j], k) == false)
