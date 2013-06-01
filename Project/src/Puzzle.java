@@ -46,7 +46,8 @@ public class Puzzle {
 				
 				duplicateFound = 0;
 				
-				// This is when backtracking a square, and that square 
+				// This is when backtracking a square, and that square has no
+				// more possible answers.
 				if (puzzle[i][j].getAvailableValues().size() == 0) {
 					puzzle[i][j].resetTrackingValues();
 					puzzle[i][j].setCurrentValue(0);
@@ -61,7 +62,7 @@ public class Puzzle {
 				
 				try {
 					k = rand.nextInt(puzzle[i][j].getAvailableValues().size());
-					while (LegalCheck.checkLegal(puzzle, puzzle[i][j], puzzle[i][j].getAvailableValues().get(k))) {
+					while (LegalCheck.isNotLegal(puzzle, puzzle[i][j], puzzle[i][j].getAvailableValues().get(k))) {
 						duplicateFound++;
 						puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 						puzzle[i][j].getAvailableValues().remove(k);
@@ -102,6 +103,7 @@ public class Puzzle {
 			}
 //			System.out.println();
 		}
+		printPuzzle();
 		removeCells();
 	}
 	
@@ -114,31 +116,7 @@ public class Puzzle {
 		// iterate through the grids/squares.
 		for (int i = 0; i < ROW_NUMBER; i++) {
 			for (int j = 0; j < COLUMN_NUMBER; j++) {
-				if (i <= 2) {
-					if (j <= 2) {
-						puzzle[i][j] = new Square(boxNum[0], Square.EMPTY_CELL);
-					} else if (j > 2 && j <= 5) {
-						puzzle[i][j] = new Square(boxNum[1], Square.EMPTY_CELL);
-					} else if (j > 5 && j <= 8) {
-						puzzle[i][j] = new Square(boxNum[2], Square.EMPTY_CELL);
-					}
-				} else if (i > 2 && i <= 5) {
-					if (j <= 2) {
-						puzzle[i][j] = new Square(boxNum[3], Square.EMPTY_CELL);
-					} else if (j > 2 && j <= 5) {
-						puzzle[i][j] = new Square(boxNum[4], Square.EMPTY_CELL);
-					} else if (j > 5 && j <= 8) {
-						puzzle[i][j] = new Square(boxNum[5], Square.EMPTY_CELL);
-					}
-				} else if (i > 5 && i <= 8) {
-					if (j <= 2) {
-						puzzle[i][j] = new Square(boxNum[6], Square.EMPTY_CELL);
-					} else if (j > 2 && j <= 5) {
-						puzzle[i][j] = new Square(boxNum[7], Square.EMPTY_CELL);
-					} else if (j > 5 && j <= 8) {
-						puzzle[i][j] = new Square(boxNum[8], Square.EMPTY_CELL);
-					}
-				}
+				puzzle[i][j] = new Square(Square.EMPTY_CELL);
 				puzzle[i][j].setColumn(j);
 				puzzle[i][j].setRow(i);
 			}
@@ -167,15 +145,15 @@ public class Puzzle {
 		int removeNum = 0;
 		int min = 0, max = 0;
 		if (difficultyLevel == EASY) {
-			max = 49;
-			min = 44;
+			max = 37;
+			min = 32;
 		} else if (difficultyLevel == MEDIUM) {
-			max = 56;
-			min = 50;
+			max = 43;
+			min = 38;
 			
 		} else if (difficultyLevel == HARD) {
-			max = 64;
-			min = 57; 
+			max = 49;
+			min = 44; 
 		}
 		
 		removeNum = min + (int)(Math.random() * ((max - min) + 1));
@@ -189,11 +167,63 @@ public class Puzzle {
 				continue;
 			}
 			puzzle[j][k].setCurrentValue(INITIAL_VALUE);
-			puzzle[j][k].setType(Square.USER_INPUT_CELL);
-			puzzle[j][k].resetTrackingValues();
+			puzzle[j][k].setType(Square.EMPTY_CELL);
+			updatePossibleValues();
 		}
+		
+//		printPuzzle();
+//		
+//		for (int i = 0; i < ROW_NUMBER; i++) {
+//			for (int j = 0; j < COLUMN_NUMBER; j++) {
+//				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
+//					updatePossibleValues(i, j);
+//				}
+//			}
+//		}
 	}
 	
+//	private static void checkUnique() {
+//		for (int i = 0; i < ROW_NUMBER; i++) {
+//			for (int j = 0; j < COLUMN_NUMBER; j++) {
+//				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
+//					for (Integer k : puzzle[i][j].getAvailableValues()) {
+//						puzzle[i][j].setCurrentValue(k);
+//					}
+//				}
+//				if (LegalCheck.isNotLegal(puzzle, puzzle[i][j], puzzle[i][j].getCurrentValue()) == false) {
+//					
+//				}
+//			}
+//		}
+//	}
+	
+	private static void updatePossibleValues() {
+		for (int i = 0; i < ROW_NUMBER; i++) {
+			for (int j = 0; j < COLUMN_NUMBER; j++) {
+				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
+					puzzle[i][j].getAvailableValues().clear();
+					for (int k = 1; k <= 9; k++) {
+						if (LegalCheck.isNotLegal(puzzle, puzzle[i][j], k) == false)
+							puzzle[i][j].getAvailableValues().add(k);
+					}
+					// print possible values for debugging
+					System.out.print("Possible values for cell[" + i + "][" + j + "]: ");
+					for (Integer k : puzzle[i][j].getAvailableValues()) {
+						System.out.print(k + " ");
+					}
+					System.out.println();
+				}
+			}
+		}
+		System.out.println();
+	}
+	
+	/**
+	 * This method calculates the amount of time elapsed since
+	 * the start of the game. 
+	 * @param startTime The time when the game was started.
+	 * @return The number of seconds elapsed.
+	 */
 	public static long calculateTimeElapse(Calendar startTime) {
 		Calendar endTime = Calendar.getInstance();
 		Date st = startTime.getTime();
@@ -221,6 +251,5 @@ public class Puzzle {
 	//  3 4 5
 	//  6 7 8
 	// These should be a constant, as it will not be modified.
-	private static final int[] boxNum = {0, 1, 2, 3, 4, 5, 6, 7, 8};
 	private static Square puzzle[][] = new Square[ROW_NUMBER][COLUMN_NUMBER];
 }
