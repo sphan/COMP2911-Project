@@ -61,10 +61,10 @@ public class HintSystem {
 			}
 		}
 		//looks for obvious solution
-		//if (search(toCheck) == true) {
-		//	System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
-		//	return move;
-		//}
+		if (search(toCheck) == true) {
+			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
+			return move;
+		}
 		System.out.println("Couldn't find an obvious solution, proceeding to do backtracking dfs:");
 		System.out.println("");
 		int[][] toSearch = new int[9][9];
