@@ -215,7 +215,7 @@ public class GameInterface {
 	/**
 	 * Function to update the timer with how much time has elapsed
 	 */
-	public void updateTimer() {
+	public static void updateTimer() {
 		int hour, minute, sec;
 		while (!hasWon()) { //checks if game is still going
 			long timeInSeconds = Puzzle.calculateTimeElapse(startTime); //finds the time elapsed
@@ -396,7 +396,7 @@ public class GameInterface {
 	}
 	
 	/**
-	 * Resets all imagry on the board, runs legal and win checks then re-paints the pane
+	 * Resets all imaginary on the board, runs legal and win checks then re-paints the pane
 	 */
 	private static void resetSourceBox(){
 		System.out.println("STUFF");
@@ -415,6 +415,7 @@ public class GameInterface {
 					//if not legal, set the look
 					if (LegalCheck.isNotLegal(boardLayout, currentSquare, currentSquare.getCurrentValue())){
 						currentSquare.setType(Square.ERROR_CELL);
+						System.out.println("Cell " + row + " " + col + " has " + currentSquare.getCurrentValue());
 					} else {
 						//if legal, and predefined cell, set it to that type
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
@@ -489,6 +490,7 @@ public class GameInterface {
 			} else
 				return false;
 			return true;
+			
 		} else
 			return false;
 	}
@@ -622,6 +624,7 @@ public class GameInterface {
 			if (newMove != null && newMove.getValue() != 0) {
 				//sets the board value to hint
 				boardLayout[newMove.getY()][newMove.getX()].setCurrentValue(newMove.getValue());
+				boardLayout[newMove.getY()][newMove.getX()].setType(Square.HINT_CELL);
 				//set what has changed
 				inputX = newMove.getX();
 				inputY = newMove.getY();
@@ -664,10 +667,7 @@ public class GameInterface {
 				source = (JButton) e.getSource(); //sets the square selection as the source
 				inputX = squareX;
 				inputY = squareY;
-	//			source.setBackground(Color.green);
 				source.setIcon(getSquareIcon(boardLayout[inputY][inputX].getCurrentValue(), true));
-				//source.setText(inputX + " " + inputY);
-				//source.setForeground(selectedBGColor);
 			}
 		}
 	}
@@ -700,6 +700,7 @@ public class GameInterface {
 
 		public void actionPerformed(ActionEvent e) {
 			switchView();
+			startTime = Calendar.getInstance();
 		}
 	}
 		
@@ -756,6 +757,7 @@ public class GameInterface {
 				}
 				//sets the value of the square to input
 				boardLayout[row][column].setCurrentValue(number);
+				resetSourceBox();
 				//deletes the current value depending on input
 			} else if ((boardLayout[row][column].getType() != Square.PREDEFINE_CELL && boardLayout[row][column].getPreviousType() != Square.PREDEFINE_CELL) && (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
 				boardLayout[row][column].setType(Square.EMPTY_CELL);
