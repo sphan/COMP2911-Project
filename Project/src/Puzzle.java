@@ -173,32 +173,7 @@ public class Puzzle {
 			puzzle[j][k].setType(Square.EMPTY_CELL);
 			updatePossibleValues();
 		}
-		
-//		printPuzzle();
-//		
-//		for (int i = 0; i < ROW_NUMBER; i++) {
-//			for (int j = 0; j < COLUMN_NUMBER; j++) {
-//				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
-//					updatePossibleValues(i, j);
-//				}
-//			}
-//		}
 	}
-	
-//	private static void checkUnique() {
-//		for (int i = 0; i < ROW_NUMBER; i++) {
-//			for (int j = 0; j < COLUMN_NUMBER; j++) {
-//				if (puzzle[i][j].getType() == Square.EMPTY_CELL) {
-//					for (Integer k : puzzle[i][j].getAvailableValues()) {
-//						puzzle[i][j].setCurrentValue(k);
-//					}
-//				}
-//				if (LegalCheck.isNotLegal(puzzle, puzzle[i][j], puzzle[i][j].getCurrentValue()) == false) {
-//					
-//				}
-//			}
-//		}
-//	}
 	
 	/**
 	 * Function to update the board based on the type of a square
