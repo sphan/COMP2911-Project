@@ -145,6 +145,7 @@ public class Puzzle {
 	 */
 	private static void removeCells() {
 		Random rand = new Random();
+		int prevVal = 0;
 		int removeNum = 0;
 		int min = 0, max = 0; //sets range to remove
 		if (difficultyLevel == EASY) {
@@ -169,9 +170,17 @@ public class Puzzle {
 				i--;
 				continue;
 			}
+			prevVal = puzzle[j][k].getCurrentValue();
 			puzzle[j][k].setCurrentValue(INITIAL_VALUE);
 			puzzle[j][k].setType(Square.EMPTY_CELL);
 			updatePossibleValues();
+			HintSystem h = new HintSystem();
+			if (h.checkSolutions(puzzle) > 1) {
+				puzzle[j][k].setCurrentValue(prevVal);
+				puzzle[j][k].setType(Square.PREDEFINE_CELL);
+				updatePossibleValues();
+				i--;
+			}
 		}
 	}
 	
