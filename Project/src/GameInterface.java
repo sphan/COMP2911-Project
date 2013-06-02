@@ -659,12 +659,6 @@ public class GameInterface {
 		public void actionPerformed(ActionEvent e){
 			//source.setForeground(defaultBGColor);
 			deselectAll();
-			System.out.println("square selected " + squareX + " " + squareY);
-			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
-			source = (JButton) e.getSource(); //sets the square selection as the source
-			inputX = squareX;
-			inputY = squareY;
-			source.setIcon(getSquareIcon(boardLayout[inputY][inputX].getCurrentValue(), true));
 			if (boardLayout[squareY][squareX].getType() != Square.PREDEFINE_CELL && boardLayout[squareY][squareX].getPreviousType() != Square.PREDEFINE_CELL){
 				System.out.println("square selected " + squareX + " " + squareY);
 				System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
