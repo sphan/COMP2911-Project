@@ -182,7 +182,6 @@ public class HintSystem {
     private Boolean search(String[][] solve) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
-				System.out.println("Checking " + j + "x " + i + "y " + solve[i][j]);
 				if (solve[i][j].length() == 1) {
 					//gets all the values so far
 					int value = Integer.parseInt(solve[i][j]);
