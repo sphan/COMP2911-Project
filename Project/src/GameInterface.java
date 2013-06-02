@@ -370,7 +370,6 @@ public class GameInterface {
 						if (!(currentSquare.getType() == Square.PREDEFINE_CELL))
 							currentSquare.setType(currentSquare.getPreviousType());
 					}
-					currentBox.setText(Integer.toString(currentSquare.getCurrentValue()));
 					type = currentSquare.getType(); //sets the look for various square types
 					currentBox.setIcon(getSquareIcon(currentSquare.getCurrentValue(), currentBox.hasFocus()));
 					type = currentSquare.getType();
