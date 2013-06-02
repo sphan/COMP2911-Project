@@ -300,10 +300,7 @@ public class GameInterface {
 				iconSelectedValue[i] = new ImageIcon(imageSelectedValue[i]);
 			}
 			
-<<<<<<< HEAD
-=======
 			//Load background texture (unimplemented)
->>>>>>> scbird01-master
 			backgroundTexture = ImageIO.read(new File("src/ProjectPics/texture.jpg"));
 			backgroundTextureGraphic = backgroundTexture.createGraphics();
 			
@@ -662,14 +659,12 @@ public class GameInterface {
 		public void actionPerformed(ActionEvent e){
 			//source.setForeground(defaultBGColor);
 			deselectAll();
-<<<<<<< HEAD
 			System.out.println("square selected " + squareX + " " + squareY);
 			System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
 			source = (JButton) e.getSource(); //sets the square selection as the source
 			inputX = squareX;
 			inputY = squareY;
 			source.setIcon(getSquareIcon(boardLayout[inputY][inputX].getCurrentValue(), true));
-=======
 			if (boardLayout[squareY][squareX].getType() != Square.PREDEFINE_CELL && boardLayout[squareY][squareX].getPreviousType() != Square.PREDEFINE_CELL){
 				System.out.println("square selected " + squareX + " " + squareY);
 				System.out.println(" square type is " + boardLayout[squareY][squareX].getType() + " and has value " + boardLayout[squareY][squareX].getCurrentValue());
@@ -681,7 +676,6 @@ public class GameInterface {
 				//source.setText(inputX + " " + inputY);
 				//source.setForeground(selectedBGColor);
 			}
->>>>>>> scbird01-master
 		}
 	}
 	
@@ -767,16 +761,8 @@ public class GameInterface {
 				} else if (key == '(' || key == '9'){
 					number = 9;
 				}
-<<<<<<< HEAD
-				if (shift){ //if shift is pressed, change to draft move
-					boardLayout[row][column].switchDraftValue(number);
-				} else { //sets the value of the square to input
-					boardLayout[row][column].setCurrentValue(number);
-				}
-=======
 				//sets the value of the square to input
 				boardLayout[row][column].setCurrentValue(number);
->>>>>>> scbird01-master
 				//deletes the current value depending on input
 			} else if ((boardLayout[row][column].getType() != Square.PREDEFINE_CELL && boardLayout[row][column].getPreviousType() != Square.PREDEFINE_CELL) && (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {
 				boardLayout[row][column].setType(Square.EMPTY_CELL);
