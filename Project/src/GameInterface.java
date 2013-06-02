@@ -597,10 +597,7 @@ public class GameInterface {
 			source = (JButton) e.getSource(); //sets the square selection as the source
 			inputX = squareX;
 			inputY = squareY;
-//			source.setBackground(Color.green);
 			source.setIcon(getSquareIcon(boardLayout[inputY][inputX].getCurrentValue(), true));
-			//source.setText(inputX + " " + inputY);
-			//source.setForeground(selectedBGColor);
 		}
 	}
 	
@@ -695,14 +692,7 @@ public class GameInterface {
 				if (shift){ //if shift is pressed, change to draft move
 					boardLayout[row][column].switchDraftValue(number);
 				} else { //sets the value of the square to input
-					//boolean illegal = LegalCheck.checkLegal(boardLayout, boardLayout[row][column], number);
 					boardLayout[row][column].setCurrentValue(number);
-					//if (!illegal){
-					//	boardLayout[row][column].setType(Square.USER_INPUT_CELL);
-					//} else {
-					//	boardLayout[row][column].setType(Square.ERROR_CELL);
-					//	System.out.println(" WRONG!!!!!!!!!");
-					//}
 				}
 				//deletes the current value depending on input
 			} else if (boardLayout[row][column].getType() != Square.PREDEFINE_CELL && (e.getKeyCode() == KeyEvent.VK_0 || e.getKeyCode() == 0 || e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)) {

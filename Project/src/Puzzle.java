@@ -97,11 +97,8 @@ public class Puzzle {
 					puzzle[i][j].getUsedValues().add(puzzle[i][j].getAvailableValues().get(k));
 					puzzle[i][j].getAvailableValues().remove(k);
 					puzzle[i][j].setType(Square.PREDEFINE_CELL);
-//					System.out.println("Cell[" + i + "][" + j + "]: " + puzzle[i][j].getCurrentValue());
 				}
-				
 			}
-//			System.out.println();
 		}
 		printPuzzle();
 		removeCells();
@@ -196,16 +193,9 @@ public class Puzzle {
 						if (LegalCheck.isNotLegal(puzzle, puzzle[i][j], k) == false)
 							puzzle[i][j].getAvailableValues().add(k);
 					}
-					// print possible values for debugging
-					System.out.print("Possible values for cell[" + i + "][" + j + "]: ");
-					for (Integer k : puzzle[i][j].getAvailableValues()) {
-						System.out.print(k + " ");
-					}
-					System.out.println();
 				}
 			}
 		}
-		System.out.println();
 	}
 	
 	/**
