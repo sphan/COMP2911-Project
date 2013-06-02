@@ -380,7 +380,18 @@ public class GameInterface {
 			}
 		}
 		
+		// open a new thread to constantly update timer.
 		startTime = Calendar.getInstance();
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				updateTimer();
+			}
+			
+		});
+		
+		t.start();
 	}
 	
 	/**
