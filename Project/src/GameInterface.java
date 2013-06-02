@@ -422,7 +422,6 @@ public class GameInterface {
 					}
 					type = currentSquare.getType(); //sets the look for various square types
 					currentBox.setIcon(getSquareIcon(currentSquare.getCurrentValue(), currentBox.hasFocus()));
-					type = currentSquare.getType();
 					
 					//Choose the background colour according to the squares and their state
 					if (type == Square.USER_INPUT_CELL){
