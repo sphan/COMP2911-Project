@@ -302,7 +302,7 @@ public class GameInterface {
 				iconSelectedValue[i] = new ImageIcon(imageSelectedValue[i]);
 			}
 			
-			backgroundTexture = ImageIO.read(new File("srx/ProjectPics/texture.jpg"));
+			backgroundTexture = ImageIO.read(new File("src/ProjectPics/texture.jpg"));
 			backgroundTextureGraphic = backgroundTexture.createGraphics();
 			
 		} catch (Exception e) {
