@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class HintSystem {
 	private String[][] toSolve;
 	private Move move;
+	private int solutions;
 	
 	/**
 	 * Constructs a HintSystem
@@ -26,6 +27,7 @@ public class HintSystem {
 			}
 		}
 		move = new Move(-1, -1, 0);
+		solutions = 0;
 	}
 	
 	/**
@@ -59,10 +61,10 @@ public class HintSystem {
 			}
 		}
 		//looks for obvious solution
-		if (search(toCheck) == true) {
-			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
-			return move;
-		}
+		//if (search(toCheck) == true) {
+		//	System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
+		//	return move;
+		//}
 		System.out.println("Couldn't find an obvious solution, proceeding to do backtracking dfs:");
 		System.out.println("");
 		int[][] toSearch = new int[9][9];
@@ -74,66 +76,67 @@ public class HintSystem {
 			}
 		}
 		//backtracking dfs
-		if (solve(0, toSearch)) {
-			//if can find a solution, return hint from first branch state used
-			printSolved(toSearch);
-			System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
-			return move;
-		}
-		//if can't find obvious hint or possible solution, returns null
-		return null;
+		//if (solve(0, 0, toSearch)) {
+		solve(0,0, toSearch);
+		//if can find a solution, return hint from first branch state used
+		printSolved(toSearch);
+		System.out.println("Move is " + move.getX() + "x " + move.getY() + "y " + move.getValue() + "value");
+		System.out.println("Number of solutions " + solutions);
+		//if can't find solution, move will be null state
+		return move;
 	}
 	
 	/**
-	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
-	 * Written by Bob Carpenter
-	 * Finds the next position to check
-	 * @param p the position
-	 * @return the next position
+	 * Function to count the number of solutions a given board has
+	 * @param Sudoku the board
+	 * @return the number of solutions
 	 */
-	private int nextPosition (int p) {
-		// position p is an integer: -1 means no more positions, otherwise, it stores 
-		//   both the row and column of a position:
-		//   the lowest 4 bits are the column number and the next 4 bits are row number
-		int j = p & 15;          // j is the column number stored at the lowest 4 bits of p
-		if (j < 8) return p+1;   // increase j by one
-		int i = p >> 4;          // i is the row number stored at the next 4 bits of p
-		if (i == 8) return -1;   // no more position
-		return (i+1)<< 4;        // increase i by 1 and set j = 0
+	public int checkSolutions(Square[][] Sudoku) {
+		int[][] toSearch = new int[9][9];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				if (Sudoku[i][j].getCurrentValue() != 0) {
+					toSearch[i][j] = Sudoku[i][j].getCurrentValue();
+				}
+			}
+		}
+		solve(0,0, toSearch);
+		System.out.println("Number of solutions " + solutions);
+		return solutions;
 	}
-
 	
 	/**
 	 * Taken from www.colloquial.com/games/sudoku/java_sudoku/html
 	 * Written by Bob Carpenter
 	 * A backtracking dfs for when we can't find obvious solution
-	 * @param p
-	 * @param cells
+	 * @param i the current y position
+	 * @param j the current x position
+	 * @param cells the board
 	 * @return
 	 */
-	private boolean solve(int p, int[][] cells) {
-		// recursive backtrack search.
-
-		if (p == -1) return true;  // no more positions
-		if (p == -2) return false; // no solution; backtrack
-
-		int j = p & 15;  // row number
-		int i = p >> 4;  // column number
-
+	private boolean solve(int i, int j, int[][] cells) {
+		//recursive backtracking search
+		if (i == 9) { //checked column, proceed to next
+			i = 0;
+			if (++j == 9) { //has checked entire board, found solution
+				solutions++;
+				return true;
+			}
+		}
 		if (cells[i][j] != 0)  // skip filled cells
-			return solve(nextPosition(p),cells);
+			return solve(i+1,j,cells);
 
 		for (int val = 1; val <= 9; ++val) {
-			if (legal(i,j,val,cells)) {
-				cells[i][j] = val;
+			if (legal(i,j,val,cells)) {  
+				cells[i][j] = val;       
 				//keeps on trying to solve
 				//if leads to fail, return try next, if no more, return false
-				if (solve(nextPosition(p),cells)) {
+				if (solve(i+1,j,cells)) {
 					//sets the move to return
 					move.setX(j);
 					move.setY(i);
 					move.setValue(val);
-					return true;
+					//return true;
 				}
 			}
 		}
@@ -152,7 +155,6 @@ public class HintSystem {
 	 * @return
 	 */
 	static boolean legal(int i, int j, int val, int[][] cells) {
-		// check if val is legal at cells[i][j].
 		for (int k = 0; k < 9; ++k)  // row
 			if (val == cells[k][j])
 				return false;
@@ -170,7 +172,7 @@ public class HintSystem {
 
 		return true; // no violations, so it's legal
 	}
-	
+
 	/**
 	 * Checks if there is an obvious hint to give
 	 * Changes the private Move object to hint if found
